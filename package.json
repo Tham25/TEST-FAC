@@ -1,0 +1,63 @@
+{
+  "name": "react-admin",
+  "proxy": "https://cdnota4.xor.support/",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@devexpress/dx-react-core": "^2.7.4",
+    "@devexpress/dx-react-grid": "^2.7.4",
+    "@devexpress/dx-react-grid-material-ui": "^2.7.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@mui/material": "^5.11.2",
+    "axios": "^0.26.1",
+    "eslint": "^7.32.0",
+    "jquery": "^3.5.1",
+    "moment": "^2.29.1",
+    "node-sass": "^8.0.0",
+    "postcss-focus-visible": "^7.1.0",
+    "react": "^16.14.0",
+    "react-cookie": "^4.0.3",
+    "react-debouncing": "^1.0.2",
+    "react-dom": "^16.14.0",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^5.2.0",
+    "reactstrap": "^8.8.1",
+    "redux": "^4.1.2",
+    "redux-persist": "^6.0.0",
+    "sass": "^1.57.1"
+  },
+  "devDependencies": {
+    "react-scripts": "^4.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "jquery": true
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
