@@ -15,7 +15,7 @@ test_stage:
     - npm install eslint@7.32.0
     - node_modules/eslint/bin/eslint.js src/ 
 
-deloy_swarm:
+deloy_product:
   image: alpine:3.11
   tags:
     - odin
@@ -29,11 +29,11 @@ deloy_swarm:
     - chmod 700 ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "mkdir -p ~/OdinOTAServer"
-    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "cd ~/OdinOTAServer/web && rm -rf .git "
+    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "mkdir -p ~/OdinWebFactory"
+    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "cd ~/OdinWebFactory/web && rm -rf .git "
     - rm -rf $(pwd)/.git 
-    - scp -p -r $(pwd)/src $(pwd)/package.json $(pwd)/public $SSH_USERNAME_STAGING@$SSH_HOST_STAGING:~/OdinOTAServer/web/
-    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "cd ~/OdinOTAServer/web && docker build . -t odin_ota_web && docker stop odin_ota_web && docker rm odin_ota_web && docker run -d --name odin_ota_web -p 8082:80 odin_ota_web && exit"
+    - scp -p -r $(pwd)/src $(pwd)/package.json $(pwd)/public $SSH_USERNAME_STAGING@$SSH_HOST_STAGING:~/OdinWebFactory/web/
+    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "cd ~/OdinWebFactory/web && docker build . -t odin_fac_web && docker stop odin_fac_web && docker rm odin_fac_web && docker run -d --name odin_fac_web -p 8082:80 odin_fac_web && exit"
   only:
     refs:
       - tags
@@ -54,10 +54,10 @@ deloy_stage:
     - chmod 700 ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "mkdir -p ~/OdinOTAServer"
-    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "cd ~/OdinOTAServer/web2 && rm -rf .git "
+    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "mkdir -p ~/OdinWebFactory"
+    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "cd ~/OdinWebFactory/web2 && rm -rf .git "
     - rm -rf $(pwd)/.git 
-    - scp -p -r $(pwd)/src $(pwd)/package.json $SSH_USERNAME_STAGING@$SSH_HOST_STAGING:~/OdinOTAServer/web2/
-    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING " cd ~/OdinOTAServer/web2 && docker build . -t odin_ota_web2 && docker stop odin_ota_web2 && docker rm odin_ota_web2 && docker run -d --name odin_ota_web2 -p 8083:80 odin_ota_web2 && exit"
+    - scp -p -r $(pwd)/src $(pwd)/package.json $SSH_USERNAME_STAGING@$SSH_HOST_STAGING:~/OdinWebFactory/web2/
+    - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING " cd ~/OdinWebFactory/web2 && docker build . -t odin_fac_web2 && docker stop odin_fac_web2 && docker rm odin_fac_web2 && docker run -d --name odin_fac_web2 -p 8083:80 odin_fac_web2 && exit"
   only:
     - master
