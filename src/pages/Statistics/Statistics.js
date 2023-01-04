@@ -123,7 +123,7 @@ function GetTime(timeOption, number) {
         minute = 0;
     } else if (timeOption === "Last 1 Quarter") {
         let monthTemp = month - number;
-        console.log("nhatnt12", month)
+        // console.log("nhatnt12", month)
         if (month === 3 && monthTemp === 0) {
             month = 1;
         }
@@ -160,7 +160,7 @@ function GetTime(timeOption, number) {
 
 function GetLoto(token) {
     var axios = require('axios');
-    let url = "http://10.1.110.30:81/device/lot?getall=true"
+    let url = web_url.get_lot;
     return new Promise((resolve, reject) => {
         axios.get(url,
             {
@@ -488,7 +488,7 @@ function getDataByDate(toDate, fromDate, token, valueLoto) {
         snEnd = valueLoto.split("xxxx")[1];
     }
     let url = web_url.get_statistics_url + '/steps?startdate=' + fromDate + '&enddate=' + toDate + "&sn_start=" + snStart + "&sn_end=" + snEnd;
-    console.log("getData", url)
+    // console.log("getData", url)
     // console.log("token", token)
     return new Promise((resolve, reject) => {
         axios.get(url,

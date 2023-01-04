@@ -31,7 +31,7 @@ function Sidemenu(props) {
 			$FOOTER = $('footer');
 		// TODO: This is some kind of easy fix, maybe we can improve this
 
-		console.log("nhatnt", CURRENT_URL)
+		// console.log("nhatnt", CURRENT_URL)
 		var setContentHeight = function () {
 			// reset height
 			$RIGHT_COL.css('min-height', $(window).height());
