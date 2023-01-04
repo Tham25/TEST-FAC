@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import { Container } from 'reactstrap';
 import CircularProgress from '@mui/material/CircularProgress';
 import CustomNotification from "../../element/CustomNotification/notification";
+import SideMenu from "../../app/Sidemenu"
 
 import {
     PagingState,
@@ -19,13 +20,14 @@ import {
     PagingPanel,
     Toolbar
 } from '@devexpress/dx-react-grid-material-ui';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, TextField } from '@material-ui/core';
 import { ArrowRightAlt, Close } from '@material-ui/icons';
+import Slide from '@mui/material/Slide';
 
 //Authen
 import { instanceOf } from 'prop-types';
-import { Logout} from "../../utils/redux/actions/ActionLogin";
+import { Logout } from "../../utils/redux/actions/ActionLogin";
 import { SearchSN } from "../../utils/redux/actions/ActionSearchSN";
 import { Redirect } from 'react-router-dom';
 import { useRef } from 'react';
@@ -121,7 +123,7 @@ function GetTime(timeOption, number) {
         minute = 0;
     } else if (timeOption === "Last 1 Quarter") {
         let monthTemp = month - number;
-        console.log("nhatnt12", month)
+        // console.log("nhatnt12", month)
         if (month === 3 && monthTemp === 0) {
             month = 1;
         }
@@ -158,7 +160,7 @@ function GetTime(timeOption, number) {
 
 function GetLoto(token) {
     var axios = require('axios');
-    let url = "http://10.1.110.30:81/device/lot?getall=true"
+    let url = web_url.get_lot;
     return new Promise((resolve, reject) => {
         axios.get(url,
             {
@@ -291,14 +293,14 @@ function exportToolData(respData, nameTool, handleShow) {
                 if (data.time === null) {
                     timeData = "Don't have time"
                 } else {
-                    timeData = data.time
+                    timeData = data.time.slice(0, 10) + " " + data.time.slice(11, 19)
                 }
 
                 exportToolData.push({
                     'stt': index + 1,
                     'name_tool': DataSearch(data.serial_number, handleShow),
                     'time': timeData,
-                    'status': data.status,
+                    'status': ColorResult(data.status),
                 });
             })
         }
@@ -320,6 +322,29 @@ function DataSearch(data, handleShow) {
     )
 }
 
+function ColorResult(data) {
+    let check;
+    let check1;
+    if (data === "PASS") {
+        check = true
+        check1 = false
+    } else if (data === "FAIL") {
+        check = false
+        check1 = false
+    } else {
+        check1 = true
+    }
+    return (
+        <div>
+            {check1 ? <span style={{ color: "#73879C", fontWeight: "700" }}>{data}</span> : (check ? <span style={{ color: "green", fontWeight: "700" }}>{data}</span> : <span style={{ color: "red", fontWeight: "700" }}>{data}</span>)}
+        </div>
+    )
+}
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="left" ref={ref} {...props} />;
+});
 
 function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data, handleRedictPage }) {
 
@@ -365,12 +390,13 @@ function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data,
         <div>
             <Dialog
                 open={open}
+                TransitionComponent={Transition}
                 fullWidth
                 maxWidth="xl"
                 style={{ height: "100%" }}
             >
                 <div className={cx('header-dialog-box')} style={{ border: "none", justifyContent: "space-between" }} >
-                    <h2>{nameTool} Details </h2>
+                    <h2 style={{ fontWeight: 600 }}>{nameTool} Details </h2>
                     <button className={cx('button-close-dialog')}
                         onClick={() => {
                             handleToClose();
@@ -462,7 +488,7 @@ function getDataByDate(toDate, fromDate, token, valueLoto) {
         snEnd = valueLoto.split("xxxx")[1];
     }
     let url = web_url.get_statistics_url + '/steps?startdate=' + fromDate + '&enddate=' + toDate + "&sn_start=" + snStart + "&sn_end=" + snEnd;
-    console.log("getData", url)
+    // console.log("getData", url)
     // console.log("token", token)
     return new Promise((resolve, reject) => {
         axios.get(url,
@@ -473,6 +499,7 @@ function getDataByDate(toDate, fromDate, token, valueLoto) {
             .catch(error => reject(error))
     })
 }
+
 
 
 
@@ -630,112 +657,118 @@ function Statistics(props) {
     // console.log(fromDate)
     return (
         <div>
-            <div style={{ width: "100%" }}>
+            <div style={{ display: "flex" }}>
                 {checkRedirect()}
                 {checkRole()}
-                <CustomNotification type="info" message={message} visible={visible} setVisible={setVisible} duration={6000}></CustomNotification>
-                <div>
-                    <div className={cx('header')}>
-                        <span > STATISTICS </span>
-                    </div>
-                    <div className={cx('container')} >
-                        <div>
-                            <label style={{ fontSize: "18px" }}>Time Options:</label>
-                            <Autocomplete
-                                disableClearable={true}
-                                options={optionsTime}
-                                onChange={onDropChangeTime}
-                                value={valueTime}
-                                style={{ width: 200, color: "#000" }}
-                                renderInput={(params) =>
-                                    <TextField {...params} style={{ width: 200 }} label="" />}
-                            />
+                <div style={{ flex:"1" }}>
+                    <SideMenu />
+                </div>
+                <div style={{ flex:"5", minHeight:"100vh" }}>
+                    <CustomNotification type="info" message={message} visible={visible} setVisible={setVisible} duration={6000}></CustomNotification>
+                    <div>
+                        <div className={cx('header')}>
+                            <span > STATISTICS </span>
                         </div>
-                        <div style={{ display: "flex", flexDirection: "column" }}>
-                            <label style={{ fontSize: "18px" }}>From:</label>
-                            <input
-                                className={cx('input-date')}
-                                type='datetime-local'
-                                value={fromDate}
-                                onChange={handleSelectFromDate}
-                            >
-
-                            </input>
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column" }} >
-                            <label style={{ fontSize: "18px" }}>To:</label>
-                            <input
-                                className={cx('input-date')}
-                                type='datetime-local'
-                                value={toDate}
-                                onChange={handleSelectToDate}
-                            >
-                            </input>
-                        </div>
-
-                        <div>
-                            <label style={{ fontSize: "18px" }}>Loto Options:</label>
-                            <Autocomplete
-                                disableClearable={true}
-                                options={optionsLoto}
-                                onChange={onDropChangeLoto}
-                                value={valueLoto}
-                                style={{ width: 200 }}
-                                renderInput={(params) =>
-                                    <TextField {...params} style={{ width: 200 }} label="" />}
-                            />
-                        </div>
-                        <button
-                            className={cx('button-search')}
-                            onClick={() => {
-                                handleClick();
-                            }}
-                        >
-                            Search
-                        </button>
-                    </div>
-                    <div className={cx("table")}>
-                        <Container>
-                            <Paper elevation={3} style={{ padding: "0px 20px" }}>
-                                <Grid
-                                    rows={rows}
-                                    columns={columns}
+                        <div className={cx('container')} >
+                            <div>
+                                <label style={{ fontSize: "18px" }}>Time Options:</label>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    options={optionsTime}
+                                    onChange={onDropChangeTime}
+                                    value={valueTime}
+                                    style={{ width: 200, color: "#000" }}
+                                    renderInput={(params) =>
+                                        <TextField {...params} style={{ width: 200 }} label="" />}
+                                />
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <label style={{ fontSize: "18px" }}>From:</label>
+                                <input
+                                    className={cx('input-date')}
+                                    type='datetime-local'
+                                    value={fromDate}
+                                    onChange={handleSelectFromDate}
                                 >
-                                    <IntegratedFiltering />
-                                    <PagingState
-                                        defaultCurrentPage={0}
-                                        pageSize={12}
-                                    />
-                                    <IntegratedPaging />
 
-                                    <VirtualTable
-                                        columnExtensions={columnExtensions}
-                                        height="520px"
-                                    />
+                                </input>
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column" }} >
+                                <label style={{ fontSize: "18px" }}>To:</label>
+                                <input
+                                    className={cx('input-date')}
+                                    type='datetime-local'
+                                    value={toDate}
+                                    onChange={handleSelectToDate}
+                                >
+                                </input>
+                            </div>
 
-                                    <TableHeaderRow />
-                                    <PagingPanel />
-                                    <Toolbar />
-                                </Grid>
-                                {/* {visible && <div className={cx("process")} >
+                            <div>
+                                <label style={{ fontSize: "18px" }}>Loto Options:</label>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    options={optionsLoto}
+                                    onChange={onDropChangeLoto}
+                                    value={valueLoto}
+                                    style={{ width: 200 }}
+                                    renderInput={(params) =>
+                                        <TextField {...params} style={{ width: 200 }} label="" />}
+                                />
+                            </div>
+                            <button
+                                className={cx('button-search')}
+                                onClick={() => {
+                                    handleClick();
+                                }}
+                            >
+                                Search
+                            </button>
+                        </div>
+                        <div className={cx("table")}>
+                            <Container>
+                                <Paper elevation={3} style={{ padding: "0px 20px" }}>
+                                    <Grid
+                                        rows={rows}
+                                        columns={columns}
+                                    >
+                                        <IntegratedFiltering />
+                                        <PagingState
+                                            defaultCurrentPage={0}
+                                            pageSize={12}
+                                        />
+                                        <IntegratedPaging />
+
+                                        <VirtualTable
+                                            columnExtensions={columnExtensions}
+                                            height="520px"
+                                        />
+
+                                        <TableHeaderRow />
+                                        <PagingPanel />
+                                        <Toolbar />
+                                    </Grid>
+                                    {/* {visible && <div className={cx("process")} >
                                     <CircularProgress />
                                     <span style={{ marginTop: "50px" }}>Processing ...</span>
                                 </div>} */}
-                            </Paper >
-                            <DialogShowData open={open}
-                                handleToClose={handleToClose}
-                                handleRedictPage={handleRedictPage}
-                                nameTool={nameTool}
-                                fromDate={fromDate}
-                                toDate={toDate}
-                                data={detailData}
-                            >
+                                </Paper >
+                                <DialogShowData open={open}
+                                    handleToClose={handleToClose}
+                                    handleRedictPage={handleRedictPage}
+                                    nameTool={nameTool}
+                                    fromDate={fromDate}
+                                    toDate={toDate}
+                                    data={detailData}
+                                >
 
-                            </DialogShowData>
-                        </Container >
+                                </DialogShowData>
+                            </Container >
+                        </div >
                     </div >
                 </div >
-            </div >
+            </div>
+
         </div >
     );
 }

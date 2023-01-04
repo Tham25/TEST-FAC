@@ -108,9 +108,9 @@ export default function SignInSide(props) {
         <div className={cx('wrapper')} >
           <div className={cx('box-left')} >
             <div className={cx('header-box-left')}>
-              <span >
+              <h2 className={cx("web-name")}>
                 FACOTORY MANAGEMENT
-              </span>
+              </h2>
             </div>
 
             <div className={cx('body-box-left')} >
@@ -178,7 +178,7 @@ export default function SignInSide(props) {
                 </Link>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <Link href='#/' variant="body2">
                   Don't have an account? Sign Up
                 </Link>
