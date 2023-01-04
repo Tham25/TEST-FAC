@@ -3,6 +3,8 @@ import classNames from 'classnames/bind';
 import style from './LookUpInfo.module.scss';
 import Paper from '@material-ui/core/Paper';
 import { Container } from 'reactstrap';
+import SideMenu from "../../app/Sidemenu"
+
 
 import {
     PagingState,
@@ -25,7 +27,7 @@ import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Cookies, withCookies } from 'react-cookie';
 
-import { Logout} from "../../utils/redux/actions/ActionLogin";
+import { Logout } from "../../utils/redux/actions/ActionLogin";
 import { DisableSearchSN } from "../../utils/redux/actions/ActionSearchSN";
 
 // var web_url = require('../url')
@@ -185,83 +187,91 @@ function LookUpInfo(props) {
     }
 
     return (
-        <div style={{ width: "100%" }}>
-            {checkRole()}
-            <div>
-                <div className={cx('header')}>
-                    <span > LOOK UP INFORMATION </span>
-                </div>
-                <div className={cx('container')} >
-                    <div className={cx('input')}>
-                        <Search style={{ margin: "10px 0px 10px 10px" }}></Search>
-                        <input
-                            className={cx('input-text')}
-                            type='text'
-                            placeholder='Serial Number'
-                            value={serialNumber}
-                            onChange={handleSerialNumber}
-                        >
-                        </input>
-                    </div>
-                    <button
-                        className={cx('button-search')}
-                        onClick={() => {
-                            handleClickSearch();
-                        }}
-                    >
-                        Search
-                    </button>
+        <div>
+            <div style={{ display: "flex" }}>
+                {checkRole()}
+                <div style={{ flex:"1" }}>
+                    <SideMenu />
                 </div>
 
-                {show && <div className={cx('info')}>
-                    <div className={cx("text-box")}>
-                        <span>SN:</span>
-                        <span>{info}</span>
-                    </div>
-                    <div className={cx("text-box")}>
-                        <span>ID Main Body:</span>
-                        <span>0</span>
-                    </div>
-                    <div className={cx("text-box")}>
-                        <span>ID JIG LCD:</span>
-                        <span>0</span>
-                    </div>
-                    <div className={cx("text-box")}>
-                        <span>ID JIG Main KeyBroad:</span>
-                        <span>0</span>
-                    </div>
-                    <div className={cx("text-box")}>
-                        <span>ID Transist:</span>
-                        <span>0</span>
-                    </div>
-                </div>}
-
-                {show && <div className={cx("table")}>
-                    <Container>
-                        <Paper elevation={3} style={{ padding: "0px 20px" }}>
-                            <Grid
-                                rows={rows}
-                                columns={columns}
+                <div style={{ flex:"5" }}>
+                    <div>
+                        <div className={cx('header')}>
+                            <span > LOOK UP INFORMATION </span>
+                        </div>
+                        <div className={cx('container')} >
+                            <div className={cx('input')}>
+                                <Search style={{ margin: "10px 0px 10px 10px" }}></Search>
+                                <input
+                                    className={cx('input-text')}
+                                    type='text'
+                                    placeholder='Serial Number'
+                                    value={serialNumber}
+                                    onChange={handleSerialNumber}
+                                >
+                                </input>
+                            </div>
+                            <button
+                                className={cx('button-search')}
+                                onClick={() => {
+                                    handleClickSearch();
+                                }}
                             >
-                                <IntegratedFiltering />
-                                <PagingState
-                                    defaultCurrentPage={0}
-                                    pageSize={pageSize}
-                                />
-                                <IntegratedPaging />
+                                Search
+                            </button>
+                        </div>
 
-                                <VirtualTable
-                                    columnExtensions={columnExtensions}
-                                    height="450px"
-                                />
+                        {show && <div className={cx('info')}>
+                            <div className={cx("text-box")}>
+                                <span>SN:</span>
+                                <span>{info}</span>
+                            </div>
+                            <div className={cx("text-box")}>
+                                <span>ID Main Body:</span>
+                                <span>0</span>
+                            </div>
+                            <div className={cx("text-box")}>
+                                <span>ID JIG LCD:</span>
+                                <span>0</span>
+                            </div>
+                            <div className={cx("text-box")}>
+                                <span>ID JIG Main KeyBroad:</span>
+                                <span>0</span>
+                            </div>
+                            <div className={cx("text-box")}>
+                                <span>ID Transist:</span>
+                                <span>0</span>
+                            </div>
+                        </div>}
 
-                                <TableHeaderRow />
-                                <PagingPanel />
-                                <Toolbar />
-                            </Grid>
-                        </Paper>
-                    </Container>
-                </div>}
+                        {show && <div className={cx("table")}>
+                            <Container>
+                                <Paper elevation={3} style={{ padding: "0px 20px" }}>
+                                    <Grid
+                                        rows={rows}
+                                        columns={columns}
+                                    >
+                                        <IntegratedFiltering />
+                                        <PagingState
+                                            defaultCurrentPage={0}
+                                            pageSize={pageSize}
+                                        />
+                                        <IntegratedPaging />
+
+                                        <VirtualTable
+                                            columnExtensions={columnExtensions}
+                                            height="450px"
+                                        />
+
+                                        <TableHeaderRow />
+                                        <PagingPanel />
+                                        <Toolbar />
+                                    </Grid>
+                                </Paper>
+                            </Container>
+                        </div>}
+                    </div>
+                </div>
             </div>
         </div>
     );

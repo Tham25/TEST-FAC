@@ -3,11 +3,14 @@ import $ from "jquery"
 import debounce from 'react-debouncing';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-// import { useDispatch, connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { checkRole } from '../utils/route/route';
 
+import Tippy from '@tippyjs/react/headless';
+import Wrapper from '../../src/element/Popper/Wrapper';
+
 function Sidemenu(props) {
-	// const dispatch = useDispatch();
+	const dispatch = useDispatch();
 	const [isLogin, setIsLogin] = useState(false);
 	// const [init, setInit] = useState(false);
 	const [isFirstTime, setIsFirstTime] = useState(true);
@@ -27,7 +30,8 @@ function Sidemenu(props) {
 			$NAV_MENU = $('.nav_menu'),
 			$FOOTER = $('footer');
 		// TODO: This is some kind of easy fix, maybe we can improve this
-		
+
+		console.log("nhatnt", CURRENT_URL)
 		var setContentHeight = function () {
 			// reset height
 			$RIGHT_COL.css('min-height', $(window).height());
@@ -92,10 +96,6 @@ function Sidemenu(props) {
 		//deboucing
 		$(window).bind("resize", debounce(setContentHeight, 100));
 
-		// $SIDEBAR_MENU
-		// 	.find('a')
-		// 	.
-
 		// check active menu
 		$SIDEBAR_MENU
 			.find('a[href="' + CURRENT_URL + '"]')
@@ -135,14 +135,14 @@ function Sidemenu(props) {
 	};
 	// /Sidebar
 
-	// const handleLogout = () => {
-	// 	const { cookies } = props;
-	// 	cookies.set("Authentication", null);
-	// 	dispatch({
-	// 		type: 'LOGOUT_SUCCESS',
-	// 		payload: null,
-	// 	})
-	// }
+	const handleLogout = () => {
+		const { cookies } = props;
+		cookies.set("Authentication", null);
+		dispatch({
+			type: 'LOGOUT_SUCCESS',
+			payload: null,
+		})
+	}
 
 	useEffect(() => {
 		initSidebar();
@@ -167,9 +167,25 @@ function Sidemenu(props) {
 		return (
 			<div style={{ background: "#2A3F54", minHeight: "100vh", paddingLeft: "15px" }}>
 				<div className="navbar nav_title" >
-					<a href="/" className="site_title"><i className="fa fa-paw" />
-						<span>Ginno Admin!</span>
-					</a>
+					{/* <a href="/login" className="site_title"> */}
+
+					<Tippy
+						placement='bottom-start'
+						render={attrs => (
+							<div  tabIndex="-1" {...attrs}>
+								<Wrapper menuSquare >  Log out </Wrapper>
+							</div>
+						)}
+					>
+						<div
+							className="site_title"
+							onClick={handleLogout}
+						>
+							<i className="fa fa-paw" />
+							<span>Ginno Admin!</span>
+						</div>
+					</Tippy>
+					{/* </a> */}
 				</div>
 				<div className="clearfix" /> {/* menu profile quick info */}
 				<div className="profile clearfix">

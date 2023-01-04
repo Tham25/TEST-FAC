@@ -2313,3 +2313,7 @@ span.right {
   font-size: 18px;
 }
 
+
+.site_title:hover{
+  cursor: pointer;
+}
