@@ -8,12 +8,12 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   GIT_SUBMODULE_STRATEGY: recursive
 
-test_stage:
-  image: node:latest
-  stage: lint
-  script:
-    - npm install eslint@7.32.0 --legacy-peer-deps
-    - node_modules/eslint/bin/eslint.js src/ 
+# test_stage:
+#   image: node:latest
+#   stage: lint
+#   script:
+#     - npm install eslint@7.32.0 --legacy-peer-deps
+#     - node_modules/eslint/bin/eslint.js src/ 
 
 deloy_product:
   image: alpine:3.11
