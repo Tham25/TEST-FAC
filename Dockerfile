@@ -1,11 +1,10 @@
 # Stage 1 - the build process
-FROM node:10 as build-deps
+FROM node:16 as build-deps
 WORKDIR /usr/src/app
-COPY package.json yarn.lock ./
+COPY package.json ./
 # RUN yarn
 COPY . ./
-RUN npm install
-RUN npm audit fix
+RUN yarn install --legacy-peer-deps
 RUN yarn build
 
 # Stage 2 - the production environment

@@ -7,7 +7,9 @@
     "@devexpress/dx-react-core": "^2.7.4",
     "@devexpress/dx-react-grid": "^2.7.4",
     "@devexpress/dx-react-grid-material-ui": "^2.7.4",
-    "@material-ui/core": "^4.12.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@mui/material": "^5.11.2",
@@ -18,7 +20,6 @@
     "moment": "^2.29.1",
     "node-sass": "^8.0.0",
     "postcss-focus-visible": "^7.1.0",
-    "npm": "^8.1.4",
     "react": "^16.14.0",
     "react-cookie": "^4.0.3",
     "react-debouncing": "^1.0.2",
@@ -28,11 +29,10 @@
     "reactstrap": "^8.8.1",
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
-    "yarn": "^1.22.10"
+    "sass": "^1.57.1"
   },
   "devDependencies": {
-    "react-scripts": "^4.0.3",
-    "sass": "^1.57.1"
+    "react-scripts": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
