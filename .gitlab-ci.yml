@@ -58,7 +58,7 @@ deloy_stage:
     - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING "cd ~/OdinWebFactory/web2 && rm -rf .git "
     - rm -rf $(pwd)/.git 
     - echo Dir=$(pwd)
-    - scp -p -r $(pwd) $SSH_USERNAME_STAGING@$SSH_HOST_STAGING:~/OdinWebFactory/web2/
+    - scp -p -r $(pwd)/. $SSH_USERNAME_STAGING@$SSH_HOST_STAGING:~/OdinWebFactory/web2/
     - ssh $SSH_USERNAME_STAGING@$SSH_HOST_STAGING " cd ~/OdinWebFactory/web2 && docker build . -t odin_fac_web2 && docker stop odin_fac_web2 && docker rm odin_fac_web2 && docker run -d --name odin_fac_web2 -p 8085:80 odin_fac_web2 && exit"
   only:
     - master
