@@ -9,7 +9,7 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
 test_stage:
-  image: node:latest
+  image: node:16
   stage: lint
   script:
     - npm install eslint@8.31.0
