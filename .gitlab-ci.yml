@@ -9,10 +9,10 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
 test_stage:
-  image: node:16
+  image: node:lastest
   stage: lint
   script:
-    - npm install eslint@8.31.0 --legacy-peer-deps
+    - npm install eslint@7.32.0 --legacy-peer-deps
     - node_modules/eslint/bin/eslint.js src/ 
 
 deloy_product:
