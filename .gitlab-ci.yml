@@ -12,7 +12,7 @@ test_stage:
   image: node:latest
   stage: lint
   script:
-    - npm install eslint@7.32.0
+    - npm install eslint@8.31.0
     - node_modules/eslint/bin/eslint.js src/ 
 
 deloy_product:
