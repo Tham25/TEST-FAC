@@ -17,8 +17,8 @@ test_stage:
 
 deloy_product:
   image: alpine:3.11
-  tags:
-    - odin
+  # tags:
+  #   - odin
   stage : deloy
   before_script:
   # Setup SSH deploy keys
@@ -42,8 +42,8 @@ deloy_product:
 
 deloy_stage:
   image: alpine:3.11
-  tags:
-    - odin
+  # tags:
+  #   - odin
   stage : deloy
   before_script:
   # Setup SSH deploy keys
