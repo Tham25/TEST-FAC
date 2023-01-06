@@ -406,9 +406,9 @@ function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data,
                     </button>
                 </div>
                 <div className={cx('note-time')}>
-                    <span >From: {fromDate.slice(0, 9)} </span>
+                    <span >From: {fromDate.slice(0, 10)} </span>
                     <ArrowRightAlt></ArrowRightAlt>
-                    <span >To: {toDate.slice(0, 9)} </span>
+                    <span >To: {toDate.slice(0, 10)} </span>
                 </div>
                 <div className={cx("table-detail")}>
                     <Container>
@@ -663,7 +663,7 @@ function Statistics(props) {
                 <div style={{ flex:"1" }}>
                     <SideMenu />
                 </div>
-                <div style={{ flex:"5", minHeight:"100vh" }}>
+                <div style={{ flex:"5",height:"100vh" }}>
                     <CustomNotification type="info" message={message} visible={visible} setVisible={setVisible} duration={6000}></CustomNotification>
                     <div>
                         <div className={cx('header')}>
@@ -741,7 +741,7 @@ function Statistics(props) {
 
                                         <VirtualTable
                                             columnExtensions={columnExtensions}
-                                            height="520px"
+                                            height="calc(100vh - 400px)"
                                         />
 
                                         <TableHeaderRow />
