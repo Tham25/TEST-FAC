@@ -35,7 +35,7 @@ const Login = (props) => {
 	}
 
 	const onLoginSuccess = (response) => {
-		console.log("token", response)
+		// console.log("token", response)
 		// let user = { username: response.username};
 		const { cookies } = props;
 

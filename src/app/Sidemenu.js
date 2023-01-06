@@ -152,7 +152,7 @@ function Sidemenu(props) {
 			setIsLogin(false);
 			return;
 		}
-
+		
 		setIsLogin(true);
 		setIsFirstTime(false);
 		setEmail(user.email);
@@ -165,7 +165,7 @@ function Sidemenu(props) {
 			return;
 		}
 		return (
-			<div style={{ background: "#2A3F54", minHeight: "100vh", paddingLeft: "15px" }}>
+			<div style={{ background: "#2A3F54", height: "100vh", paddingLeft: "15px" }}>
 				<div className="navbar nav_title" >
 					
 					<Tippy

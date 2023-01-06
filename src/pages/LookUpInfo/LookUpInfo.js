@@ -72,18 +72,78 @@ function ColorResult(data) {
 }
 
 
+function DataSteps(data) {
+    var arrData = [];
+    arrData.push(data.split("\r\n"))
+
+    const newArrData = arrData[0].filter(item => item !== "")
+    console.log("arrData", newArrData)
+
+    return (
+        newArrData.map((arrData, index) => {
+            let data = arrData.split(" ")
+            let score = data[2].split(":")
+            console.log(data)
+            return (
+                <div style={{ display: "flex", justifyContent: "flex-start", marginLeft: "100px" }}>
+                    <table style={{ border: "1", fontSize: "15px", alignItems: "flex-start" }}>
+
+                        <tr style={{ marginTop: "10px", fontWeight: "700" }}>
+                            <td >FILE {index + 1}:</td>
+                            <td ></td>
+                            <td ></td>
+                        </tr>
+
+                        <tr>
+                            <td ></td>
+                            <td style={{fontWeight: "700" }}>Name:</td>
+                            <td >{data[0]}</td>
+                        </tr>
+
+                        <tr style={{ marginTop: "10px" }}>
+                            <td></td>
+                            <td style={{ marginLeft: "5px", fontWeight: "700" }} >Result:</td>
+                            <td  >{ColorResult(data[1])}</td>
+                        </tr>
+                        <tr style={{ marginTop: "10px" }}>
+                            <td></td>
+                            <td style={{ marginLeft: "5px", fontWeight: "700" }} >Score:</td>
+                            <td  >{score[1]}</td>
+                        </tr>
+                    </table>
+                </div>
+            )
+        })
+
+    )
+}
+
+
 function exportData(respData) {
     let exportData = [];
 
     respData.forEach((element) => {
         // console.log("nhatnt", element)
-        exportData.push({
-            'time': element.content.time.slice(0, 19),
-            'tool': "Tool " + element.content.tool,
-            'steps': element.content.step,
-            'result': ColorResult(element.content.status),
-            'ipcountry': element.ip,
-        });
+
+
+        if (element.content.tool === "audio_jig") {
+            exportData.push({
+                'time': element.content.time.slice(0, 19),
+                'tool': "Tool " + element.content.tool,
+                'steps': DataSteps(element.content.step),
+                'result': ColorResult(element.content.status),
+                'ipcountry': element.ip,
+            });
+        } else {
+            exportData.push({
+                'time': element.content.time.slice(0, 19),
+                'tool': "Tool " + element.content.tool,
+                'steps': element.content.step,
+                'result': ColorResult(element.content.status),
+                'ipcountry': element.ip,
+            });
+        }
+
     });
     return exportData;
 }
@@ -161,7 +221,7 @@ function LookUpInfo(props) {
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        if(token !== ""){
+        if (token !== "") {
             if (dataState) {
                 setSerialNumber(data)
                 getInfomationBySN(data, token)
@@ -173,7 +233,7 @@ function LookUpInfo(props) {
                         } else {
                             console.log("error")
                         }
-    
+
                     })
                     .catch(error => {
                         console.log(error)
@@ -199,7 +259,7 @@ function LookUpInfo(props) {
                     <SideMenu />
                 </div>
 
-                <div style={{ flex: "5" }}>
+                <div style={{ flex: "5", height: "100vh" }}>
                     <div>
                         <div className={cx('header')}>
                             <span > LOOK UP INFORMATION </span>
@@ -265,7 +325,7 @@ function LookUpInfo(props) {
 
                                         <VirtualTable
                                             columnExtensions={columnExtensions}
-                                            height="450px"
+                                            height="calc(100vh - 520px)"
                                         />
 
                                         <TableHeaderRow />
