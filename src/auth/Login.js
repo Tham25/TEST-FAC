@@ -41,6 +41,7 @@ const Login = (props) => {
 
 		const authenInfo = {
 			accessToken: response.data.token,
+			email: response.data.user_email,
 		}
 
 		const ONE_HOUR = 3600 * 1000;

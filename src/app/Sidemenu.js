@@ -14,7 +14,7 @@ function Sidemenu(props) {
 	const [isLogin, setIsLogin] = useState(false);
 	// const [init, setInit] = useState(false);
 	const [isFirstTime, setIsFirstTime] = useState(true);
-	// const [email, setEmail] = useState("");
+	const [email, setEmail] = useState("");
 
 
 
@@ -155,7 +155,7 @@ function Sidemenu(props) {
 
 		setIsLogin(true);
 		setIsFirstTime(false);
-		// setEmail(user.email);
+		setEmail(user.email);
 	}, [props])
 
 	function sidemenuRender() {
@@ -167,8 +167,7 @@ function Sidemenu(props) {
 		return (
 			<div style={{ background: "#2A3F54", minHeight: "100vh", paddingLeft: "15px" }}>
 				<div className="navbar nav_title" >
-					{/* <a href="/login" className="site_title"> */}
-
+					
 					<Tippy
 						placement='bottom-start'
 						render={attrs => (
@@ -194,7 +193,7 @@ function Sidemenu(props) {
 					</div>
 					<div className="profile_info">
 						<span>Welcome,</span>
-						<h2>Nguyentrongnhat@ginno.com</h2>
+						<h2>{email}</h2>
 					</div>
 				</div>
 				{/* /menu profile quick info */}
