@@ -89,26 +89,26 @@ function DataSteps(data) {
                     <table style={{ border: "1", fontSize: "15px", alignItems: "flex-start" }}>
 
                         <tr style={{ marginTop: "10px", fontWeight: "700" }}>
-                            <td >FILE {index + 1}:</td>
+                            <td style={{ width: "80px" }} >FILE {index + 1}:</td>
                             <td ></td>
                             <td ></td>
                         </tr>
 
                         <tr>
                             <td ></td>
-                            <td style={{fontWeight: "700" }}>Name:</td>
-                            <td >{data[0]}</td>
+                            <td style={{ fontWeight: "700", width: "80px" }}>Name:</td>
+                            <td style={{ width: "300px" }} >{data[0]}</td>
                         </tr>
 
                         <tr style={{ marginTop: "10px" }}>
                             <td></td>
-                            <td style={{ marginLeft: "5px", fontWeight: "700" }} >Result:</td>
-                            <td  >{ColorResult(data[1])}</td>
+                            <td style={{ marginLeft: "5px", fontWeight: "700", width: "80px" }} >Result:</td>
+                            <td style={{ width: "300px" }} >{ColorResult(data[1])}</td>
                         </tr>
                         <tr style={{ marginTop: "10px" }}>
                             <td></td>
-                            <td style={{ marginLeft: "5px", fontWeight: "700" }} >Score:</td>
-                            <td  >{score[1]}</td>
+                            <td style={{ marginLeft: "5px", fontWeight: "700", width: "80px" }} >Score:</td>
+                            <td style={{ width: "300px" }}>{score[1]}</td>
                         </tr>
                     </table>
                 </div>
