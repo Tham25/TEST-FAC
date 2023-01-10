@@ -100,7 +100,7 @@ function GetTime(timeOption, number) {
         if (date === 7) {
             date = 1
         }
-        if (date < 7 && dateTemp < 0) {
+        else if (date < 7 && dateTemp < 0) {
             date = endOfMonth.slice(8, 10) - (number - date)
             if (month === 1) {
                 month = 12
@@ -109,6 +109,8 @@ function GetTime(timeOption, number) {
                 month = month - 1
             }
 
+        } else {
+            date = date -number
         }
         hour = 0;
         minute = 0;
@@ -127,9 +129,11 @@ function GetTime(timeOption, number) {
         if (month === 3 && monthTemp === 0) {
             month = 1;
         }
-        if (month < 3 && monthTemp < 0) {
+        else if (month < 3 && monthTemp < 0) {
             month = 12 - (number - month);
             year = year - 1;
+        } else {
+            month = month - number
         }
         hour = 0;
         minute = 0;
@@ -521,7 +525,6 @@ function Statistics(props) {
     const { loginState, timestamp } = useSelector(state => state.login);
     const timeRef = useRef(timestamp);
     const dispatch = useDispatch();
-
 
     useEffect(() => {
         if (new Date().getTime() - timeRef.current > 3600 * 1000) {
