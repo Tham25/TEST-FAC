@@ -3,3 +3,5 @@ node_modules
 *url.js
 package-lock.json
 yarn.lock
+builds/
+ota-web-staging.pem
