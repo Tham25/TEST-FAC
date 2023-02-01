@@ -11,9 +11,7 @@ import {
     PagingState,
     IntegratedFiltering,
     IntegratedPaging,
-    FilteringState,
     SearchState,
-   
 } from '@devexpress/dx-react-grid';
 
 import {
@@ -22,7 +20,6 @@ import {
     TableHeaderRow,
     PagingPanel,
     Toolbar,
-    TableFilterRow,
     SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import React, { useEffect, useState } from 'react';
