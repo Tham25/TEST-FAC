@@ -11,6 +11,9 @@ import {
     PagingState,
     IntegratedFiltering,
     IntegratedPaging,
+    FilteringState,
+    SearchState,
+   
 } from '@devexpress/dx-react-grid';
 
 import {
@@ -18,7 +21,9 @@ import {
     VirtualTable,
     TableHeaderRow,
     PagingPanel,
-    Toolbar
+    Toolbar,
+    TableFilterRow,
+    SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import React, { useEffect, useState } from 'react';
 import { Dialog, TextField } from '@material-ui/core';
@@ -56,7 +61,7 @@ const columnExtensions = [
 
 ];
 
-const optionsTime = ['Today', 'Yesterday', 'Last 1 Weeks', 'Last 1 Months', 'Last 1 Quarter', 'Last 1 Year', "Time Custom"];
+const optionsTime = ['Today', 'Yesterday', 'Last 1 Week', 'Last 1 Month', 'Last 1 Quarter', 'Last 1 Year', "Time Custom"];
 
 const optionsLoto = ['All'];
 
@@ -94,7 +99,7 @@ function GetTime(timeOption, number) {
         hour = 0;
         minute = 0;
     }
-    else if (timeOption === "Last 1 Weeks") {
+    else if (timeOption === "Last 1 Week") {
         let endOfMonth = moment().clone().subtract(7, 'days').endOf('month').format('YYYY-MM-DD');
         let dateTemp = date - number;
         if (date === 7) {
@@ -115,7 +120,8 @@ function GetTime(timeOption, number) {
         hour = 0;
         minute = 0;
     }
-    else if (timeOption === "Last 1 Months") {
+    else if (timeOption === "Last 1 Month") {
+        
         month = month - number;
         if (month === 0) {
             month = 12;
@@ -125,7 +131,6 @@ function GetTime(timeOption, number) {
         minute = 0;
     } else if (timeOption === "Last 1 Quarter") {
         let monthTemp = month - number;
-        // console.log("nhatnt12", month)
         if (month === 3 && monthTemp === 0) {
             month = 1;
         }
@@ -158,7 +163,11 @@ function GetTime(timeOption, number) {
         minute = "0" + minute
     }
 
-    fullDate = year + "-" + month + "-" + date + "T" + hour + ":" + minute
+    // check last date
+    const lastDate = new Date(year, month, 0).getDate();
+    if (date > lastDate) date = lastDate;
+
+    fullDate = year + "-" + month + "-" + date + "T" + hour + ":" + minute;
     return fullDate
 }
 
@@ -287,7 +296,7 @@ function ParseLot(lot) {
     return messageProduct + messageHW + messageSMT + messageSN + messageYear + messageMonth
 }
 
-function exportToolData(respData, nameTool, handleShow) {
+function exportToolData(respData, nameTool) {
     let exportToolData = [];
 
     respData.forEach((element) => {
@@ -302,9 +311,9 @@ function exportToolData(respData, nameTool, handleShow) {
 
                 exportToolData.push({
                     'stt': index + 1,
-                    'name_tool': DataSearch(data.serial_number, handleShow),
+                    name_tool: data.serial_number,
                     'time': timeData,
-                    'status': ColorResult(data.status),
+                    status: data.status,
                 });
             })
         }
@@ -314,7 +323,7 @@ function exportToolData(respData, nameTool, handleShow) {
     return exportToolData;
 }
 
-function DataSearch(data, handleShow) {
+function DataSearch({data, handleShow}) {
 
     return (
         <button
@@ -326,33 +335,13 @@ function DataSearch(data, handleShow) {
     )
 }
 
-function ColorResult(data) {
-    let check;
-    let check1;
-    if (data === "PASS") {
-        check = true
-        check1 = false
-    } else if (data === "FAIL") {
-        check = false
-        check1 = false
-    } else {
-        check1 = true
-    }
-    return (
-        <div>
-            {check1 ? <span style={{ color: "#73879C", fontWeight: "700" }}>{data}</span> : (check ? <span style={{ color: "green", fontWeight: "700" }}>{data}</span> : <span style={{ color: "red", fontWeight: "700" }}>{data}</span>)}
-        </div>
-    )
-}
-
-
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="left" ref={ref} {...props} />;
 });
 
 function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data, handleRedictPage }) {
-
     const dispatch = useDispatch();
+    const [searchValue, setSearchState] = useState('');
 
     let name
     if (nameTool === "Jig LCD" || nameTool === "Jig Main Keybroad" || nameTool === "Transist") {
@@ -361,15 +350,7 @@ function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data,
         name = "SN"
     }
 
-    const columnsTableDetail = [
-        { name: 'stt', title: 'STT' },
-        { name: 'name_tool', title: name },
-        { name: 'time', title: 'Time' },
-        { name: 'status', title: 'Status ' },
-    ];
-
     const columnExtensionsTableDetail = [
-
         { columnName: 'stt', align: 'center', width: '100px' },
         { columnName: 'name_tool', align: 'center', width: '500px' },
         { columnName: 'time', align: 'center', width: '400px' },
@@ -384,9 +365,16 @@ function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data,
         dispatch(SearchSN(data))
     })
 
+    const columnsTableDetail = [
+        { name: 'stt', title: 'STT', filterAble: false},
+        { name: 'name_tool', title: name, valueOptions: rows.map((item) => item.name_tool) ,  getCellValue: (params) => <DataSearch data={params.name_tool} handleShow={handleShow}  /> },
+        { name: 'time', title: 'Time' },
+        { name: 'status', title: 'Status ',},
+    ];
+
 
     useEffect(() => {
-        setRows(exportToolData(data, nameTool, handleShow))
+        setRows(exportToolData(data, nameTool))
     }, [open])// eslint-disable-line react-hooks/exhaustive-deps
 
 
@@ -398,6 +386,7 @@ function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data,
                 fullWidth
                 maxWidth="xl"
                 style={{ height: "100%" }}
+                duration={700}
             >
                 <div className={cx('header-dialog-box')} style={{ border: "none", justifyContent: "space-between" }} >
                     <h2 style={{ fontWeight: 600 }}>{nameTool} Details </h2>
@@ -421,6 +410,7 @@ function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data,
                                 rows={rows}
                                 columns={columnsTableDetail}
                             >
+                                <SearchState defaultValue=''  value={searchValue} onValueChange={setSearchState}/>
                                 <IntegratedFiltering />
                                 <PagingState
                                     defaultCurrentPage={0}
@@ -431,10 +421,10 @@ function DialogShowData({ open, handleToClose, nameTool, fromDate, toDate, data,
                                 <VirtualTable
                                     columnExtensions={columnExtensionsTableDetail}
                                 />
-
                                 <TableHeaderRow />
-                                <PagingPanel />
                                 <Toolbar />
+                                <SearchPanel />
+                                <PagingPanel />
                             </Grid>
                         </Paper>
                     </Container>
@@ -449,7 +439,6 @@ function exportData(respData, handleShow) {
     let exportData = [];
 
     respData.forEach((element, index) => {
-        // console.log("nhatnt", element)
 
         exportData.push({
             'stt': index + 1,
@@ -492,8 +481,6 @@ function getDataByDate(toDate, fromDate, token, valueLoto) {
         snEnd = valueLoto.split("xxxx")[1];
     }
     let url = web_url.get_statistics_url + '/steps?startdate=' + fromDate + '&enddate=' + toDate + "&sn_start=" + snStart + "&sn_end=" + snEnd;
-    // console.log("getData", url)
-    // console.log("token", token)
     return new Promise((resolve, reject) => {
         axios.get(url,
             {
@@ -609,17 +596,21 @@ function Statistics(props) {
         else if (value === "Yesterday") {
             setFromDate(GetTime(value, 1))
         }
-        else if (value === "Last 1 Weeks") {
+        else if (value === "Last 1 Week") {
             setFromDate(GetTime(value, 7))
         }
-        else if (value === "Last 1 Months") {
+        else if (value === "Last 1 Month") {
             setFromDate(GetTime(value, 1))
         } else if (value === "Last 1 Quarter") {
             setFromDate(GetTime(value, 3))
         } else if (value === "Last 1 Year") {
             setFromDate(GetTime(value, 1))
         }
-        setToDate(GetTime("", 0))
+        if (value === 'Yesterday') {
+            setToDate(GetTime("Yesterday", 0))
+        } else {
+            setToDate(GetTime("", 0))
+        }
         setValueTime(value)
     }
 
@@ -692,9 +683,7 @@ function Statistics(props) {
                                     type='datetime-local'
                                     value={fromDate}
                                     onChange={handleSelectFromDate}
-                                >
-
-                                </input>
+                                />
                             </div>
                             <div style={{ display: "flex", flexDirection: "column" }} >
                                 <label style={{ fontSize: "18px" }}>To:</label>
@@ -703,12 +692,11 @@ function Statistics(props) {
                                     type='datetime-local'
                                     value={toDate}
                                     onChange={handleSelectToDate}
-                                >
-                                </input>
+                                />
                             </div>
 
                             <div>
-                                <label style={{ fontSize: "18px" }}>Loto Options:</label>
+                                <label style={{ fontSize: "18px" }}>Lot Options:</label>
                                 <Autocomplete
                                     disableClearable={true}
                                     options={optionsLoto}
