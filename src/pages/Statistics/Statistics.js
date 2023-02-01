@@ -1,4 +1,3 @@
-import moment from 'moment';
 import classNames from 'classnames/bind';
 import style from './Statistics.module.scss';
 import Paper from '@material-ui/core/Paper';
@@ -76,96 +75,77 @@ function Data(data, handleShow) {
     )
 }
 
-function GetTime(timeOption, number) {
-    let time = new Date();
-    let fullDate;
-    let year = time.getFullYear()
-    let month = time.getMonth() + 1
-    let date = time.getDate()
-    let hour = time.getHours()
-    let minute = time.getMinutes()
+function GetTime(timeOption) {
+    const now = new Date();
+    let date = now.getDate();
+    let month = now.getMonth();
+    let fullYear = now.getFullYear();
+    let hour = now.getHours()
+    let minute = now.getMinutes()
 
 
-    if (timeOption === "Today") {
-        date = date - number;
-        hour = 0;
-        minute = 0;
-    }
-    else if (timeOption === "Yesterday") {
-        date = date - number;
-        hour = 0;
-        minute = 0;
-    }
-    else if (timeOption === "Last 1 Week") {
-        let endOfMonth = moment().clone().subtract(7, 'days').endOf('month').format('YYYY-MM-DD');
-        let dateTemp = date - number;
-        if (date === 7) {
-            date = 1
-        }
-        else if (date < 7 && dateTemp < 0) {
-            date = endOfMonth.slice(8, 10) - (number - date)
-            if (month === 1) {
-                month = 12
-                year = year - 1
-            } else {
-                month = month - 1
+    const monthNowString = month + 1 < 10 ? `0${month + 1}` : month + 1;
+    const dateNowString = date < 10 ? `0${date}` : date;
+    const hourString = hour < 10 ? `0${hour}` : hour;
+    const minuteString = minute < 10 ? `0${minute}` : minute;
+    let toDate = fullYear + '-' + monthNowString + '-' + dateNowString +'T' + hourString + ':' + minuteString;
+
+    
+    switch (timeOption) {
+        // yesterday
+        case optionsTime[1]:
+            toDate = fullYear  + '-' + monthNowString  + '-' + dateNowString +'T00:00';
+
+            const yesterday = new Date(now.setDate(now.getDate() - 1));
+            fullYear = yesterday.getFullYear();
+            month = yesterday.getMonth();
+            date = yesterday.getDate();
+            break;
+        // last 1 week
+        case optionsTime[2]:
+            const dateLastWeek =  new Date(fullYear, month, date - 7);
+            fullYear = dateLastWeek.getFullYear();
+            month = dateLastWeek.getMonth();
+            date = dateLastWeek.getDate();
+            break;
+        // last 1 month
+        case optionsTime[3]:
+            
+            const lastDateOfLastMonth = new Date(fullYear, month, 0).getDate();
+            if (date > lastDateOfLastMonth) {
+                date = lastDateOfLastMonth;
             }
+            fullYear = month ? fullYear : fullYear - 1; 
+            month = month ? month - 1 : 11;
+            break;
+        // last 1 quater
+        case optionsTime[4]:
+            fullYear = month - 3 < 0 ? fullYear - 1 : fullYear;
+            month = month - 3 < 0 ? 12 + month - 3 : month - 3;
 
-        } else {
-            date = date -number
-        }
-        hour = 0;
-        minute = 0;
-    }
-    else if (timeOption === "Last 1 Month") {
-        
-        month = month - number;
-        if (month === 0) {
-            month = 12;
-            year = year - 1;
-        }
-        hour = 0;
-        minute = 0;
-    } else if (timeOption === "Last 1 Quarter") {
-        let monthTemp = month - number;
-        if (month === 3 && monthTemp === 0) {
-            month = 1;
-        }
-        else if (month < 3 && monthTemp < 0) {
-            month = 12 - (number - month);
-            year = year - 1;
-        } else {
-            month = month - number
-        }
-        hour = 0;
-        minute = 0;
-    } else if (timeOption === "Last 1 Year") {
-        year = year - number;
-        hour = 0;
-        minute = 0;
+            const lastDateOf3LastMonth = new Date(fullYear, month + 1, 0).getDate();
+            if (date > lastDateOf3LastMonth) {
+                date = lastDateOf3LastMonth;
+            }
+            break;
+        // last 1 year
+        case optionsTime[5]:
+            fullYear -= 1;
+            const lastDateOfLastYear = new Date(fullYear, month + 1, 0).getDate();
+            if (date > lastDateOfLastYear) {
+                date = lastDateOfLastYear;
+            }
+            break;
+        default:
+            break;
     }
 
-    if (date < 10) {
-        date = "0" + date
-    }
-    if (month < 10) {
-        month = "0" + month
-    }
+    month += 1;
+    const monthString = month < 10 ? `0${month}` : month;
+    const dateString = date < 10 ? `0${date}` : date;
+    const fullDate = fullYear + '-' + monthString + '-' + dateString;
 
-    if (hour < 10) {
-        hour = "0" + hour
-    }
-
-    if (minute < 10) {
-        minute = "0" + minute
-    }
-
-    // check last date
-    const lastDate = new Date(year, month, 0).getDate();
-    if (date > lastDate) date = lastDate;
-
-    fullDate = year + "-" + month + "-" + date + "T" + hour + ":" + minute;
-    return fullDate
+    return {fromDate: fullDate + 'T00:00' , toDate  }
 }
 
 function GetLoto(token) {
@@ -495,8 +475,7 @@ function Statistics(props) {
 
     const [rows, setRows] = useState([]);
     const [open, setOpen] = useState(false);
-    const [toDate, setToDate] = useState(GetTime("", 0))
-    const [fromDate, setFromDate] = useState(GetTime(optionsTime[2], 7));
+    const [dateRange, setDateRange] = useState(GetTime(optionsTime[2]));
     const [nameTool, setNameTool] = useState('');
     const [valueTime, setValueTime] = useState(optionsTime[2]);
     const [valueLoto, setValueLoto] = useState(optionsLoto[0]);
@@ -551,9 +530,9 @@ function Statistics(props) {
 
 
     const handleClick = () => {
-        if (toDate !== "" && fromDate !== "") {
+        if (dateRange.toDate !== "" && dateRange.fromDate !== "") {
             setRows(waitData)
-            getDataByDate(toDate, fromDate, token, valueLoto)
+            getDataByDate(dateRange.toDate, dateRange.fromDate, token, valueLoto)
                 .then(resp => {
                     const data = resp.data
                     if (resp.status === 200) {
@@ -586,38 +565,20 @@ function Statistics(props) {
         setNameTool(nameTool);
     }
 
-    const onDropChangeTime = (event, value) => {
-        if (value === "Today") {
-            setFromDate(GetTime(value, 0))
-        }
-        else if (value === "Yesterday") {
-            setFromDate(GetTime(value, 1))
-        }
-        else if (value === "Last 1 Week") {
-            setFromDate(GetTime(value, 7))
-        }
-        else if (value === "Last 1 Month") {
-            setFromDate(GetTime(value, 1))
-        } else if (value === "Last 1 Quarter") {
-            setFromDate(GetTime(value, 3))
-        } else if (value === "Last 1 Year") {
-            setFromDate(GetTime(value, 1))
-        }
-        if (value === 'Yesterday') {
-            setToDate(GetTime("Yesterday", 0))
-        } else {
-            setToDate(GetTime("", 0))
-        }
-        setValueTime(value)
+    const onDropChangeTime = ( event, value) => {
+        setValueTime(value);
+        const dateRange = GetTime(value);
+        setDateRange(dateRange);
+
     }
 
     const handleSelectToDate = event => {
-        setToDate(event.target.value)
+        setDateRange(prev => ({...prev, toDate: event.target.value}));
         setValueTime(optionsTime[6])
     };
 
     const handleSelectFromDate = event => {
-        setFromDate(event.target.value)
+        setDateRange(prev => ({...prev, fromDate: event.target.value}));
         setValueTime(optionsTime[6])
         // console.log(event.target.value)
     };
@@ -678,7 +639,7 @@ function Statistics(props) {
                                 <input
                                     className={cx('input-date')}
                                     type='datetime-local'
-                                    value={fromDate}
+                                    value={dateRange.fromDate}
                                     onChange={handleSelectFromDate}
                                 />
                             </div>
@@ -687,7 +648,7 @@ function Statistics(props) {
                                 <input
                                     className={cx('input-date')}
                                     type='datetime-local'
-                                    value={toDate}
+                                    value={dateRange.toDate}
                                     onChange={handleSelectToDate}
                                 />
                             </div>
@@ -736,17 +697,13 @@ function Statistics(props) {
                                         <PagingPanel />
                                         <Toolbar />
                                     </Grid>
-                                    {/* {visible && <div className={cx("process")} >
-                                    <CircularProgress />
-                                    <span style={{ marginTop: "50px" }}>Processing ...</span>
-                                </div>} */}
                                 </Paper >
                                 <DialogShowData open={open}
                                     handleToClose={handleToClose}
                                     handleRedictPage={handleRedictPage}
                                     nameTool={nameTool}
-                                    fromDate={fromDate}
-                                    toDate={toDate}
+                                    fromDate={dateRange.fromDate}
+                                    toDate={dateRange.toDate}
                                     data={detailData}
                                 >
 
