@@ -9,10 +9,10 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
 test_stage:
-  image: node:latest
+  image: node:18.14.0
   stage: lint
   script:
-    - npm install eslint@7.32.0 --legacy-peer-deps
+    - yarn add eslint@7.32.0 --legacy-peer-deps
     - node_modules/eslint/bin/eslint.js src/ 
 
 deloy_product:
@@ -25,7 +25,6 @@ deloy_product:
     - "which ssh-agent || ( apk update && apk add openssh-client )"
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY_STAGING" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:

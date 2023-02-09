@@ -1,0 +1,23 @@
+.menu-popper {
+  & .logout-button {
+    color: #fff;
+    background: linear-gradient(180deg, #434343, #000);
+  }
+
+  & .logout-button:hover {
+    opacity: 0.8;
+  }
+}
+
+.box-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(180deg, #434343, #000);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  font-weight: 400;
+}

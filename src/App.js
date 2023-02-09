@@ -1,13 +1,16 @@
-import React, { Component } from "react"
-import PageContent from "./app/PageContent"
+import { Provider } from 'react-redux';
 
+import Notification from './components/Notification';
+import Router from './components/Router';
+import { rootStore } from './redux';
 
-export default class App extends Component {
-  render() {
-    return (
-      <PageContent></PageContent>
-    )
-  }
+function App() {
+  return (
+    <Provider store={rootStore}>
+      <Notification />
+      <Router />
+    </Provider>
+  );
 }
 
-
+export default App;
