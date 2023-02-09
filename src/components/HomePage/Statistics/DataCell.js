@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Button, Menu } from '@mui/material';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGrid } from '@mui/x-data-grid';
 
 export function DataCell({ cellValues, getDataDetail }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -76,7 +76,7 @@ export function DataCellStep({ cellValues }) {
         }}
       >
         <Box sx={{ width: 500, height: 300 }}>
-          <DataGridPremium
+          <DataGrid
             disableColumnMenu
             hideFooter
             columns={[
