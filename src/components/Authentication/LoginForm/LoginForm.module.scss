@@ -1,0 +1,36 @@
+.login-form {
+  width: 100%;
+
+  & .login-button {
+    font-size: 16px;
+    height: 48px;
+    background: linear-gradient(180deg, #434343, #000);
+  }
+
+  & .login-button:hover {
+    opacity: 0.8;
+  }
+}
+
+.login-input:first-child {
+  margin-bottom: 24px;
+}
+
+.login-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 0;
+}
+
+.login-control span,
+.login-control a {
+  font-size: 12px;
+  color: var(--primary);
+}
+
+@media only screen and (max-width: 1024px) {
+  .login-form {
+    // width: 412px;
+  }
+}

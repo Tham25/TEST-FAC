@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300;1,400;1,500;1,700&display=swap');
+
+:root {
+  --font-family: 'Roboto', sans-serif;
+  --primary: #263544;
+  --black: #000;
+  --white: #fff;
+  --background-color: #f9fafb;
+  --text-color: #6f7284;
+
+  //Default layout
+  --default-layout-header-height: 52px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: 16px;
+  text-rendering: optimizeSpeed;
+}
+
+input[type='number'] {
+  -moz-appearance: 'textfield';
+
+  &::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+}
+
+.blur-up {
+  -webkit-filter: blur(5px);
+  filter: blur(5px);
+  transition: 'filter 400ms, -webkit-filter 400ms';
+}
+
+.blur-up.lazyloaded {
+  -webkit-filter: blur(0);
+  filter: blur(0);
+}

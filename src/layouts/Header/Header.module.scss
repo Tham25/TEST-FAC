@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--default-layout-header-height);
+  background-color: #f1f3f4;
+}
+
+.page-info {
+  display: flex;
+  align-items: center;
+
+  p {
+    color: var(--primary);
+    margin-left: 16px;
+  }
+}
