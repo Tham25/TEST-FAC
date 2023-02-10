@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DataGridPremium, GridToolbarFilterButton } from '@mui/x-data-grid-premium';
+import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
 
 import { formatTestSteps } from '~/utils/formatStatistics';
 
@@ -22,7 +22,7 @@ function TestSteps({ toolName = '', serialNumber, isLoading = false }) {
   }, [serialNumber, testSteps, toolName]);
 
   return (
-    <DataGridPremium
+    <DataGrid
       disableColumnMenu
       rows={isLoading ? [] : dataTable.rows}
       columns={dataTable.columns}

@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box, Dialog, IconButton } from '@mui/material';
-import { DataGridPremium, GridToolbarFilterButton } from '@mui/x-data-grid-premium';
+import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { formatDataDetail } from '~/utils/formatStatistics';
@@ -33,7 +33,7 @@ function InfoDetail({ data, toolName }) {
     <Box sx={{ flex: 1, p: 1, display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ height: 52, p: 2 }}>{toolName} info details:</Box>
       {data.length ? (
-        <DataGridPremium
+        <DataGrid
           disableColumnMenu
           disableSelectionOnClick
           autoPageSize

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { getGridSingleSelectOperators, getGridStringOperators } from '@mui/x-data-grid-premium';
+import { getGridSingleSelectOperators, getGridStringOperators } from '@mui/x-data-grid';
 
 import { DataCell, DataCellStep } from '~/components/HomePage/Statistics/DataCell';
 

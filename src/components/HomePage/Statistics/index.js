@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Stack } from '@mui/material';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGrid } from '@mui/x-data-grid';
 
 import { formatStatistics } from '~/utils/formatStatistics';
 import { InfoSearch } from './InfoSearch';
@@ -29,7 +29,7 @@ function Statistics() {
     <Stack sx={{ height: '100%', p: 1 }}>
       <InfoSearch handChangeData={handChangeData} />
       <Box sx={{ mt: 2, height: '100%', display: 'flex' }}>
-        <DataGridPremium
+        <DataGrid
           disableColumnMenu
           disableSelectionOnClick
           autoPageSize

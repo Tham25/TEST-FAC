@@ -9,7 +9,7 @@
     "@mui/lab": "^5.0.0-alpha.118",
     "@mui/material": "^5.11.7",
     "@mui/styled-engine": "^5.11.0",
-    "@mui/x-data-grid-premium": "http://10.1.110.10:8088/package/mui-x-data-grid-premium.git",
+    "@mui/x-data-grid": "^5.17.22",
     "@mui/x-date-pickers": "^5.0.17",
     "@reduxjs/toolkit": "^1.9.2",
     "@testing-library/jest-dom": "^5.16.5",
