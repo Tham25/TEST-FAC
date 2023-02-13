@@ -9,14 +9,14 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
 test_stage:
-  image: node:18.14.0
+  image: node:18-alpine3.16
   stage: lint
   script:
     - yarn add eslint@7.32.0 --legacy-peer-deps
     - node_modules/eslint/bin/eslint.js src/ 
 
 deloy_product:
-  image: alpine:3.11
+  image: alpine:3.16
   # tags:
   #   - odin
   stage : deloy

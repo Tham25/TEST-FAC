@@ -21,6 +21,9 @@ cp src/url.js $LOCAL_DEST/src/
 read -p "Debug 3-Reset git"
 cd $LOCAL_DEST && git reset --h
 cd ../..
+
+cp Dockerfile $LOCAL_DEST
+
 # read -p "Press enter to continue"
 pwd
 read -p "Checking existed folder"

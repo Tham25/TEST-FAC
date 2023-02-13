@@ -31,4 +31,5 @@ yarn-error.log*
 package-lock.json
 builds/
 ota-web-staging.pem
+xor_factory.pem
 url.js
