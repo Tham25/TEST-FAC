@@ -41,7 +41,7 @@ export async function request(config) {
     }
 
     axios({
-      baseURL: host,
+      // baseURL: host,
       url: config.path,
       method: config.method,
       data: config.data,

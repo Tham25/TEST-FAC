@@ -50,7 +50,7 @@ export function InfoSearch({ handChangeData }) {
 
   const handleSearch = () => {
     const lotInfo = lotValue === 'All' ? ['', ''] : lotValue.split('xxxx');
-    const infoSearch = `startdate=${dateSearch.fromDate}&enddate=${dateSearch.toDate}&sn_start=${lotInfo[0]}&sn_end=${lotInfo[1]}`;
+    const infoSearch = `steps?startdate=${dateSearch.fromDate}&enddate=${dateSearch.toDate}&sn_start=${lotInfo[0]}&sn_end=${lotInfo[1]}`;
     dispatch(getStatisticsInfoRedux(infoSearch));
   };
 

@@ -29,6 +29,6 @@ yarn-error.log*
 .eslintcache
 *url.js
 package-lock.json
-yarn.lock
 builds/
 ota-web-staging.pem
+url.js
