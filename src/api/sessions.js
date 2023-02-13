@@ -1,11 +1,12 @@
 import { deleteUser, getUser } from '~/utils/user';
+import { UrlPath } from './index';
 import { request } from './request';
 
 export const login = async (username, password, remember) => {
   const data = { username, password, remember };
   try {
     const response = await request({
-      path: '/imgcustomer/login',
+      path: UrlPath.user_login_url,
       method: 'post',
       data,
       refresh: false,

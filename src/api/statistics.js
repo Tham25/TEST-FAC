@@ -1,9 +1,10 @@
+import { UrlPath } from '.';
 import { request } from './request';
 
 export const getStatisticsInfo = async (timeBonus) => {
   try {
     const response = await request({
-      path: `/device/analytics/steps?${timeBonus}`,
+      path: `${UrlPath.get_statistics_url}/${timeBonus}`,
       refresh: false,
     });
     return Promise.resolve(response.data);
