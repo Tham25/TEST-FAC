@@ -1,0 +1,10 @@
+{
+  "model": "devices.lotinfo",
+  "pk": 1,
+  "fields": {
+    "sn_start": "P240SN",
+    "sn_end": "BA",
+    "factory_date": "2022-01-26T04:45:00Z",
+    "note": "S/N cho lô sản xuất main ODIN 26/01/2022"
+  }
+}

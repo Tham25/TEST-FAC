@@ -148,7 +148,7 @@ export function SidebarMenu() {
             </ListItemButton>
             <Collapse in={openSubnav && isOpen} timeout="auto">
               {item.subnav.map((item, id) => {
-                const isActive = item.linkTo === pathname;
+                const isActive = item.linkTo.split('/')[3] === pathname.split('/')[3];
                 return (
                   <ListItemButton
                     key={id}

@@ -25,16 +25,12 @@ function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/app" element={<PrivateOutlet />}>
-          <Route path="home/*" element={<HomePage />}>
-            <Route path="statistics" element={<Statistics />} />
-            <Route path="infomation" element={<Infomation />} />
-          </Route>
+          <Route path="home/*" element={<HomePage />} />
         </Route>
         <Route path="/">
           <Route path="/" element={<Navigate to="/app/home" />} />
           <Route path="login" element={<Login />} />
         </Route>
-        <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
     </BrowserRouter>
   );

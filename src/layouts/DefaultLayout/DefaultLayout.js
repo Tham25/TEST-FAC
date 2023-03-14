@@ -13,7 +13,7 @@ function DefaultLayout({ children, title, description = title }) {
   const [isOpenSidebar, setIsOpenSidebar] = useState(true);
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100vh'}}>
       <Sidebar isOpenSidebar={isOpenSidebar} onCloseSidebar={() => setIsOpenSidebar(false)} />
       <Stack sx={{ flex: 1 }}>
         <Header title={description} handleOpenSidebar={() => setIsOpenSidebar(!isOpenSidebar)} />

@@ -4,13 +4,13 @@ const rootPath = 'app/home';
 export const homePage = [
   {
     title: 'Statistics',
-    linkTo: `${rootPath}/statistics`,
+    linkTo: `/${rootPath}/statistics`,
     navigatePath: 'statistics',
     component: <Statistics />,
   },
   {
     title: 'Look up Infomation',
-    linkTo: `${rootPath}/infomation`,
+    linkTo: `/${rootPath}/infomation`,
     navigatePath: 'infomation',
     component: <Infomation />,
   },

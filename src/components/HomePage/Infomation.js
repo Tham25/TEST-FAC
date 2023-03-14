@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Divider, FormControl, Input, InputAdornment, InputLabel, Stack } from '@mui/material';
+import { Box, Divider, FormControl, IconButton, Input, InputLabel, Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { clearDataTestSteps, getTestStepsRedux } from '~/redux/slices/testSteps';
 import TestSteps from './TestSteps';
@@ -10,10 +10,9 @@ function Infomation() {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.testSteps);
 
-  const handleSearch = (e) => {
-    if (e.keyCode === 13) {
-      dispatch(getTestStepsRedux(value));
-    }
+  const handleSearch = () => {
+    const formatValue = value.trim();
+    dispatch(getTestStepsRedux(formatValue));
   };
 
   useEffect(() => {
@@ -21,7 +20,7 @@ function Infomation() {
   }, [dispatch]);
 
   return (
-    <Box sx={{ height: '100%', p: 2, display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ height: '100%', p: 1, display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex' }}>
         <FormControl sx={{ width: '25ch' }} variant="standard">
           <InputLabel>Serial number</InputLabel>
@@ -30,11 +29,15 @@ function Infomation() {
             value={value}
             type="text"
             endAdornment={
-              <InputAdornment position="end">
+              <IconButton sx={{ p: 0 }} onClick={handleSearch}>
                 <SearchIcon />
-              </InputAdornment>
+              </IconButton>
             }
-            onKeyDown={handleSearch}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                handleSearch();
+              }
+            }}
           />
         </FormControl>
         <SnInfo sx={{ ml: 8 }} SN={value} />

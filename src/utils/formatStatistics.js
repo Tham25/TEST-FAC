@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
-import { getGridSingleSelectOperators, getGridStringOperators } from '@mui/x-data-grid';
+import { getGridSingleSelectOperators, getGridStringOperators } from '@mui/x-data-grid-premium';
 
 import { DataCell, DataCellStep } from '~/components/HomePage/Statistics/DataCell';
 
-export const formatStatistics = (data, getDataDetail) => {
+export const formatListTool = (data, getDataDetail) => {
   const rows = [];
   const columns = [];
   if (data.length) {
