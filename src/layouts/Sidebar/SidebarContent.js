@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -109,6 +109,7 @@ export function SidebarMenu() {
   const [openSubnav, setOpenSubnav] = useState(true);
   const [itemCurrent, setItemCurrent] = useState(0);
   const navigate = useNavigate();
+  // const { pathname } = useLocation();
 
   const handleOnClick = (index) => {
     if (itemCurrent === index) {
@@ -118,6 +119,19 @@ export function SidebarMenu() {
       setOpenSubnav(true);
     }
   };
+
+  // check open
+  useEffect(() => {
+    let itemOpen = 0;
+    config.sidebarData.forEach((item, index) => {
+      item.subnav.forEach((element) => {
+        if (element.linkTo.includes(pathname)) {
+          itemOpen = index;
+        }
+      });
+    });
+    setItemCurrent(itemOpen);
+  }, [pathname]);
 
   return (
     <List sx={{ color: '#ccc' }}>

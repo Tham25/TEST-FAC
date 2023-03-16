@@ -5,7 +5,6 @@ import { HomePage } from '~/pages';
 
 import Login from '~/pages/Login';
 import { TIME_COOKIES_USER, userLogout } from '~/redux/slices/user';
-import { Infomation, Statistics } from '~/components/HomePage';
 
 function PrivateOutlet() {
   const { user, timestamp } = useSelector((state) => state.user);

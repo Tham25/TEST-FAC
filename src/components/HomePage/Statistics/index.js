@@ -4,22 +4,21 @@ import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { Button, Stack, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 
-import { getInfoCircuitBlocksRedux, getListToolRedux } from '~/redux/slices/statistics';
+import { getInfoCircuitAssyRedux, getListToolRedux } from '~/redux/slices/statistics';
 import { InfoSearch } from './InfoSearch';
 import ListTool from './ListTool';
-import { getCircuitBlocksRedux } from '~/redux/slices/circuitBlocks';
+import { getCircuitAssyRedux } from '~/redux/slices/circuitAssy';
 
-function formatData(infoCircuitBlocks, circuitBlocks, handleNavigate) {
+function formatData(infoCircuitAssy, circuitAssy, handleNavigate) {
   const columns = [];
   const rows = [];
 
-  if (infoCircuitBlocks.length && circuitBlocks.length) {
-    infoCircuitBlocks.forEach((item, index) => {
-      // view - khong click
+  if (infoCircuitAssy.length && circuitAssy.length) {
+    infoCircuitAssy.forEach((item, index) => {
       const rowInfo = {
         id: item.block,
         STT: index,
-        Catalog: circuitBlocks.find((element) => element.id === item.block).name,
+        Catalog: circuitAssy.find((element) => element.id === item.block)?.name,
         Total: item.total,
         Passed: item.pass_count,
         Failed: item.fail_count,
@@ -56,24 +55,24 @@ function formatData(infoCircuitBlocks, circuitBlocks, handleNavigate) {
 }
 
 function Statistics() {
-  const { infoCircuitBlocks } = useSelector((state) => state.statistics);
+  const { infoCircuitAssy } = useSelector((state) => state.statistics);
   const [dataTable, setDataTable] = useState({ rows: [], columns: [] });
-  const { circuitBlocks } = useSelector((state) => state.circuitBlocks);
+  const { circuitAssy } = useSelector((state) => state.circuitAssy);
   const [circuitBlockValue, setCircuitBlockValue] = useState('All');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const circuitBlocksOptions = useMemo(() => {
-    const circuitBlockName = circuitBlocks.map((item) => {
+  const circuitAssyOptions = useMemo(() => {
+    const circuitBlockName = circuitAssy.map((item) => {
       return item.name;
     });
 
     return ['All', ...circuitBlockName];
-  }, [circuitBlocks]);
+  }, [circuitAssy]);
 
   useEffect(() => {
     // first load
-    dispatch(getCircuitBlocksRedux());
+    dispatch(getCircuitAssyRedux());
   }, [dispatch]);
 
   const handleNavigate = useCallback(
@@ -85,14 +84,14 @@ function Statistics() {
   );
 
   useEffect(() => {
-    const temp = formatData(infoCircuitBlocks, circuitBlocks, handleNavigate);
+    const temp = formatData(infoCircuitAssy, circuitAssy, handleNavigate);
     setDataTable(temp);
-  }, [circuitBlocks, handleNavigate, infoCircuitBlocks]);
+  }, [circuitAssy, handleNavigate, infoCircuitAssy]);
 
   const handleChangeInfoSearch = useCallback(
     (newInfo) => {
       if (circuitBlockValue === 'All') {
-        dispatch(getInfoCircuitBlocksRedux(newInfo));
+        dispatch(getInfoCircuitAssyRedux(newInfo));
       } else {
         dispatch(getListToolRedux(newInfo));
       }
@@ -110,7 +109,7 @@ function Statistics() {
             value={circuitBlockValue}
             onChange={(e) => handleNavigate(e.target.value)}
           >
-            {circuitBlocksOptions.map((item, index) => (
+            {circuitAssyOptions.map((item, index) => (
               <MenuItem key={index} value={item} sx={{ fontSize: [12, 14, 14] }}>
                 {item}
               </MenuItem>
@@ -119,7 +118,7 @@ function Statistics() {
         </FormControl>
         <InfoSearch handleChangeInfoSearch={handleChangeInfoSearch} />
       </Stack>
-      {circuitBlocks.length && (
+      {circuitAssy.length && (
         <Routes>
           <Route path="/" element={<Navigate to="All" />} />
           <Route
@@ -134,8 +133,8 @@ function Statistics() {
               />
             }
           />
-          {circuitBlocks.map((item) => (
-            <Route key={item.id} path={item.name} element={<ListTool />} />
+          {circuitAssy.map((item, index) => (
+            <Route key={index} path={item.name} element={<ListTool />} />
           ))}
         </Routes>
       )}

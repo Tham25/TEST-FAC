@@ -6,7 +6,7 @@ export const getListTool = async (infoSearch) => {
     const response = await request({
       path: UrlPath.get_statistics_url,
       refresh: false,
-      params: infoSearch
+      params: infoSearch,
     });
     return Promise.resolve(response.data);
   } catch (e) {
@@ -15,7 +15,7 @@ export const getListTool = async (infoSearch) => {
   }
 };
 
-export const getInfoCircuitBlocks = async (infoSearch) => {
+export const getInfoCircuitAssy = async (infoSearch) => {
   try {
     const response = await request({
       path: '',
@@ -24,7 +24,7 @@ export const getInfoCircuitBlocks = async (infoSearch) => {
     });
     return Promise.resolve(response.data);
   } catch (error) {
-    console.log('ERROR getInfoCircuitBlocks fail', error);
+    console.log('ERROR getInfoCircuitAssy fail', error);
     return Promise.reject(Error(error));
   }
-}
+};

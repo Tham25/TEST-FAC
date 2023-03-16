@@ -6,7 +6,7 @@ const initialState = {
   isLoading: false,
   error: '',
   listTool: [],
-  infoCircuitBlocks: [],
+  infoCircuitAssy: [],
 };
 
 const slice = createSlice({
@@ -28,10 +28,10 @@ const slice = createSlice({
       state.listTool = action.payload;
     },
 
-    setDataInfoCircuitBlocks(state, action) {
+    setDataInfoCircuitAssy(state, action) {
       state.isLoading = false;
       state.error = '';
-      state.infoCircuitBlocks = action.payload;
+      state.infoCircuitAssy = action.payload;
     },
   },
 });
@@ -39,7 +39,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // --------------------------------------
-export function getInfoCircuitBlocksRedux(infoSearch) {
+export function getInfoCircuitAssyRedux(infoSearch) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(
@@ -50,7 +50,7 @@ export function getInfoCircuitBlocksRedux(infoSearch) {
       }),
     );
     try {
-      // const data = await getInfoCircuitBlocks(infoSearch);
+      // const data = await getInfoCircuitAssy(infoSearch);
       const data = [
         { block: 0, total: 2, pass_count: 1, fail_count: 1, unknow_status: 0 },
         { block: 1, total: 5, pass_count: 2, fail_count: 2, unknow_status: 1 },
@@ -60,7 +60,7 @@ export function getInfoCircuitBlocksRedux(infoSearch) {
         { block: 5, total: 2, pass_count: 2, fail_count: 0, unknow_status: 0 },
       ];
 
-      dispatch(slice.actions.setDataInfoCircuitBlocks(data));
+      dispatch(slice.actions.setDataInfoCircuitAssy(data));
       dispatch(clearNotification());
       dispatch(
         setNotification({
