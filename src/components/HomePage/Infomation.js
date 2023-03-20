@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Divider, FormControl, IconButton, Input, InputLabel, Stack } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Box, Divider, Stack } from '@mui/material';
+
 import { clearDataTestSteps, getTestStepsRedux } from '~/redux/slices/testSteps';
 import TestSteps from './TestSteps';
+import InputSearch from '../InputSearchSN';
 
 function Infomation() {
-  const [value, setValue] = useState('');
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.testSteps);
+  const [serialNumber, setSerialNumber] = useState('');
 
-  const handleSearch = () => {
-    const formatValue = value.trim();
-    dispatch(getTestStepsRedux(formatValue));
+  const handleSearch = (value) => {
+    setSerialNumber(value);
+    dispatch(getTestStepsRedux(value));
   };
 
   useEffect(() => {
@@ -22,28 +23,11 @@ function Infomation() {
   return (
     <Box sx={{ height: '100%', p: 1, display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex' }}>
-        <FormControl sx={{ width: '25ch' }} variant="standard">
-          <InputLabel>Serial number</InputLabel>
-          <Input
-            onChange={(e) => setValue(e.target.value)}
-            value={value}
-            type="text"
-            endAdornment={
-              <IconButton sx={{ p: 0 }} onClick={handleSearch}>
-                <SearchIcon />
-              </IconButton>
-            }
-            onKeyDown={(e) => {
-              if (e.keyCode === 13) {
-                handleSearch();
-              }
-            }}
-          />
-        </FormControl>
-        <SnInfo sx={{ ml: 8 }} SN={value} />
+        <InputSearch label="Serial number" handleSearch={handleSearch} />
+        <SnInfo sx={{ ml: 8 }} SN={serialNumber} />
       </Box>
       <Box sx={{ flex: 1, mt: 2 }}>
-        <TestSteps serialNumber={value} isLoading={isLoading} />
+        <TestSteps serialNumber={serialNumber} isLoading={isLoading} />
       </Box>
     </Box>
   );

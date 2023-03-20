@@ -1,4 +1,4 @@
-import Assembly from '~/components/AddPage/Assembly';
+import { Assembly, Mapping } from '~/components/AddPage';
 import { Infomation, Statistics } from '~/components/HomePage';
 
 const rootPath = 'app/home';
@@ -20,5 +20,11 @@ export const homePage = [
     linkTo: `/${rootPath}/assembly`,
     navigatePath: 'assembly',
     component: <Assembly />,
+  },
+  {
+    title: 'Mapping',
+    linkTo: `/${rootPath}/mapping`,
+    navigatePath: 'mapping',
+    component: <Mapping />,
   },
 ];

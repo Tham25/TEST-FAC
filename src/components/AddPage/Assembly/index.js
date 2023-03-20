@@ -35,7 +35,6 @@ function Assembly() {
     if (circuitAssy.length) setAssyValue(circuitAssy[0].name);
   }, [circuitAssy]);
 
-  console.log('username', user);
   const formDefault = useMemo(
     () =>
       stepArray.map((item) => {

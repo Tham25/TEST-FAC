@@ -10,7 +10,8 @@ function InputText() {
 
   const handleSearchAssyHis = (e) => {
     if (e.keyCode === 13) {
-      dispatch(getAssyHistoryRedux(idValue.trim()));
+      dispatch(getAssyHistoryRedux('id_assy', idValue.trim()));
+      e.target.blur();
     }
   };
 

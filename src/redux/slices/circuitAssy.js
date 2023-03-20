@@ -1,12 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createAssyHistory, getAssyHistory, getAssyTemplate } from '~/api/assyApi';
-import { setNotification } from './notification';
+import {
+  checkAssyIds,
+  createAssyHistory,
+  getAssyHistory,
+  getAssyTemplate,
+  mappingAssyId,
+} from '~/api/assyApi';
+import { clearNotification, setNotification } from './notification';
 
 const initialState = {
   isLoading: false,
   error: '',
   circuitAssy: [],
   assyHistory: [],
+  assyIdsCheck: [],
   assyId: '',
 };
 
@@ -52,12 +59,14 @@ export function getCircuitAssyRedux() {
   };
 }
 
-export function getAssyHistoryRedux(assyId) {
+export function getAssyHistoryRedux(field, assyId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      dispatch(slice.actions.actionSuccess({ field: 'assyId', data: assyId }));
-      const assyHistory = await getAssyHistory(assyId);
+      if (field === 'id_assy') {
+        dispatch(slice.actions.actionSuccess({ field: 'assyId', data: assyId }));
+      }
+      const assyHistory = await getAssyHistory(field, assyId);
       dispatch(slice.actions.actionSuccess({ field: 'assyHistory', data: assyHistory }));
     } catch (e) {
       dispatch(slice.actions.hasError(e.message));
@@ -69,12 +78,43 @@ export function createAssyHistoryRedux(data) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      dispatch(setNotification({ open: true, message: 'Loading', severity: 'info' }));
       dispatch(slice.actions.clearDataAssy({ field: 'assyId', data: '' }));
       await createAssyHistory(data);
 
+      dispatch(clearNotification());
       dispatch(
         setNotification({ open: true, message: 'Submit form success', severity: 'success' }),
       );
+    } catch (e) {
+      dispatch(slice.actions.hasError(e.message));
+    }
+  };
+}
+
+export function mappingAssyIdRedux(assyForm) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      dispatch(setNotification({ open: true, message: 'Loading', severity: 'info' }));
+      await mappingAssyId(assyForm);
+
+      dispatch(clearNotification());
+      dispatch(
+        setNotification({ open: true, message: 'Mapping Assy Id success!', severity: 'success' }),
+      );
+    } catch (e) {
+      dispatch(slice.actions.hasError(e.message));
+    }
+  };
+}
+
+export function checkAssyIdsRedux(assyIds) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const result = await checkAssyIds(assyIds);
+      dispatch(slice.actions.actionSuccess({ field: 'assyIdsCheck', data: result }));
     } catch (e) {
       dispatch(slice.actions.hasError(e.message));
     }

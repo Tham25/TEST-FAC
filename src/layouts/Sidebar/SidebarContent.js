@@ -140,6 +140,7 @@ export function SidebarMenu() {
         return (
           <Box key={index}>
             <ListItemButton
+              disableRipple
               sx={{
                 '&:hover': { backgroundColor: activeColor },
                 boxShadow:
@@ -167,6 +168,7 @@ export function SidebarMenu() {
                   <ListItemButton
                     key={id}
                     component="div"
+                    disableRipple
                     sx={{
                       userSelect: 'none',
                       ml: 2,

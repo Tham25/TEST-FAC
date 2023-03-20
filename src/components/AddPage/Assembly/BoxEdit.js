@@ -64,8 +64,6 @@ export function formatDataTable(formCreate, handleChangeForm) {
   const rows = [];
   const columns = [];
 
-  console.log('formCreate', formCreate);
-
   if (formCreate?.length) {
     formCreate.forEach((item, index) => {
       rows.push({

@@ -3,6 +3,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import SourceIcon from '@mui/icons-material/Source';
 import AttractionsIcon from '@mui/icons-material/Attractions';
+import SettingsInputCompositeIcon from '@mui/icons-material/SettingsInputComposite';
 
 export const sidebarData = [
   {
@@ -33,6 +34,11 @@ export const sidebarData = [
         title: 'Assembly',
         linkTo: '/app/home/assembly',
         icon: <AttractionsIcon sx={{ color: '#ccc' }} />,
+      },
+      {
+        title: 'Mapping',
+        linkTo: '/app/home/mapping',
+        icon: <SettingsInputCompositeIcon sx={{ color: '#ccc' }} />,
       },
     ],
   },
