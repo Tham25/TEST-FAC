@@ -1,25 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  TextField,
-  IconButton,
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { TextField, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 import { getLotOptionsRedux } from '~/redux/slices/lotOptions';
-import { getStatisticsInfoRedux } from '~/redux/slices/statistics';
 import { getFormatTime, timeList } from '~/utils/formatTime';
 
-export function InfoSearch({ handChangeData }) {
+export function InfoSearch({ handleChangeInfoSearch }) {
   const dispatch = useDispatch();
   const [lotValue, setLotValue] = useState('All');
   const { lotList } = useSelector((state) => state.lotOptions);
-  const { statisticsInfo } = useSelector((state) => state.statistics);
   const [timeOptions, setTimeOptions] = useState(timeList[2]);
   const [dateSearch, setDateSearch] = useState(getFormatTime(timeList[2]));
 
@@ -37,22 +26,26 @@ export function InfoSearch({ handChangeData }) {
   }, [dispatch]);
 
   const handleChangeFromDate = (e) => {
+    if (timeOptions !== 'Time Custom') setTimeOptions('Time Custom');
     setDateSearch((prev) => ({ ...prev, fromDate: e.target.value }));
   };
 
   const handleChangeToDate = (e) => {
+    if (timeOptions !== 'Time Custom') setTimeOptions('Time Custom');
     setDateSearch((prev) => ({ ...prev, toDate: e.target.value }));
   };
 
   useEffect(() => {
-    handChangeData(statisticsInfo);
-  }, [handChangeData, statisticsInfo]);
-
-  const handleSearch = () => {
     const lotInfo = lotValue === 'All' ? ['', ''] : lotValue.split('xxxx');
-    const infoSearch = `steps?startdate=${dateSearch.fromDate}&enddate=${dateSearch.toDate}&sn_start=${lotInfo[0]}&sn_end=${lotInfo[1]}`;
-    dispatch(getStatisticsInfoRedux(infoSearch));
-  };
+    const infoSearch = {
+      startdate: dateSearch.fromDate,
+      enddate: dateSearch.toDate,
+      sn_start: lotInfo[0],
+      sn_end: lotInfo[1],
+    };
+
+    handleChangeInfoSearch(infoSearch);
+  }, [dateSearch.fromDate, dateSearch.toDate, handleChangeInfoSearch, lotValue]);
 
   const handleChangeTimeOption = (timeOption) => {
     setTimeOptions(timeOption);
@@ -63,14 +56,14 @@ export function InfoSearch({ handChangeData }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel>Lot Options</InputLabel>
+        <InputLabel>Lot options</InputLabel>
         <Select
-          sx={{ width: [100, 110, 140], fontSize: [12, 12, 16], minHeight: 32 }}
+          sx={{ width: [100, 110, 140], fontSize: [12, 12, 14], minHeight: 32 }}
           value={lotValue}
           onChange={(e) => setLotValue(e.target.value)}
         >
           {lotOptions.map((item, index) => (
-            <MenuItem key={index} value={item} sx={{ fontSize: [12, 14, 16] }}>
+            <MenuItem key={index} value={item} sx={{ fontSize: [12, 12, 14] }}>
               {item}
             </MenuItem>
           ))}
@@ -79,12 +72,12 @@ export function InfoSearch({ handChangeData }) {
       <FormControl variant="standard" sx={{ m: '8px 24px' }}>
         <InputLabel>Time options</InputLabel>
         <Select
-          sx={{ width: [100, 110, 140], fontSize: [12, 12, 16], minHeight: 32 }}
+          sx={{ width: [100, 110, 140], fontSize: [12, 12, 14], minHeight: 32 }}
           value={timeOptions}
           onChange={(e) => handleChangeTimeOption(e.target.value)}
         >
           {timeList.map((item, index) => (
-            <MenuItem sx={{ fontSize: [12, 14, 16] }} key={index} value={item}>
+            <MenuItem sx={{ fontSize: [12, 14, 14] }} key={index} value={item}>
               {item}
             </MenuItem>
           ))}
@@ -92,7 +85,7 @@ export function InfoSearch({ handChangeData }) {
       </FormControl>
 
       <TextField
-        sx={{ m: 1, '& input': { fontSize: [12, 14, 16], minHeight: 22 } }}
+        sx={{ m: 1, '& input': { fontSize: [12, 12, 14], minHeight: 22 } }}
         label="From"
         variant="standard"
         type="datetime-local"
@@ -103,7 +96,7 @@ export function InfoSearch({ handChangeData }) {
         onChange={handleChangeFromDate}
       />
       <TextField
-        sx={{ m: 1, '& input': { fontSize: [12, 14, 16], minHeight: 22 } }}
+        sx={{ m: 1, '& input': { fontSize: [12, 12, 14], minHeight: 22 } }}
         label="To"
         variant="standard"
         type="datetime-local"
@@ -113,9 +106,6 @@ export function InfoSearch({ handChangeData }) {
         }}
         onChange={handleChangeToDate}
       />
-      <IconButton sx={{ ml: 2, alignSelf: 'center' }} onClick={handleSearch}>
-        <SearchIcon sx={{ fontSize: 36, fontWeight: 600 }} />
-      </IconButton>
     </Box>
   );
 }

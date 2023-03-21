@@ -26,7 +26,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           sx: {
             width: DRAWER_WIDTH,
             background: 'linear-gradient(180deg, #434343, #000)',
-            height: '100vh',
+            height: '100%',
             overflow: 'hidden',
           },
         }}
@@ -42,7 +42,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         sx={{
           width: DRAWER_WIDTH,
           background: 'linear-gradient(180deg, #434343, #000)',
-          height: '100vh',
+          height: '100%',
           overflow: 'hidden',
         }}
       >

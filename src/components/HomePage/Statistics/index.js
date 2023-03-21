@@ -1,45 +1,144 @@
-import { useCallback, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Box, Stack } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Button, Stack, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
-import { formatStatistics } from '~/utils/formatStatistics';
+import { getInfoCircuitAssyRedux, getListToolRedux } from '~/redux/slices/statistics';
 import { InfoSearch } from './InfoSearch';
-import InfoDetail from './InfoDetail';
+import ListTool from './ListTool';
+import { getCircuitAssyRedux } from '~/redux/slices/circuitAssy';
+
+function formatData(infoCircuitAssy, circuitAssy, handleNavigate) {
+  const columns = [];
+  const rows = [];
+
+  if (infoCircuitAssy.length && circuitAssy.length) {
+    infoCircuitAssy.forEach((item, index) => {
+      const rowInfo = {
+        id: item.block,
+        STT: index,
+        Catalog: circuitAssy.find((element) => element.id === item.block)?.name,
+        Total: item.total,
+        Passed: item.pass_count,
+        Failed: item.fail_count,
+        Unknown: item.unknow_status,
+      };
+      rows.push(rowInfo);
+    });
+
+    Object.keys(rows[0]).forEach((key) => {
+      if (key !== 'id') {
+        const columInfo = {
+          field: key,
+          flex: 1,
+          sortable: false,
+          headerAlign: 'center',
+          align: key !== 'Catalog' && 'center',
+          resizable: true,
+        };
+
+        if (key === 'Catalog') {
+          columInfo.renderCell = (cellValues) => (
+            <Button onClick={() => handleNavigate(cellValues.value)} sx={{ textTransform: 'none' }}>
+              {cellValues.value}
+            </Button>
+          );
+        }
+
+        columns.push(columInfo);
+      }
+    });
+  }
+
+  return { rows, columns };
+}
 
 function Statistics() {
-  const [dataStatistics, setDataStatistics] = useState({ rows: [], columns: [] });
-  const [dataDetail, setDataDetail] = useState([]);
-  const [openDetail, setOpenInfoDetail] = useState(false);
-  const toolName = useRef('');
-  const { isLoading } = useSelector((state) => state.statistics);
+  const { infoCircuitAssy } = useSelector((state) => state.statistics);
+  const [dataTable, setDataTable] = useState({ rows: [], columns: [] });
+  const { circuitAssy } = useSelector((state) => state.circuitAssy);
+  const [circuitBlockValue, setCircuitBlockValue] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const getDataDetail = (data, toolNameNew) => {
-    setOpenInfoDetail(true);
-    toolName.current = toolNameNew;
-    setDataDetail(data);
-  };
-  const handChangeData = useCallback((data) => {
-    setOpenInfoDetail(false);
-    const dataFormat = formatStatistics(data, getDataDetail);
-    setDataStatistics(dataFormat);
-  }, []);
+  const circuitAssyOptions = useMemo(() => {
+    const circuitBlockName = circuitAssy.map((item) => {
+      return item.name;
+    });
+
+    return ['All', ...circuitBlockName];
+  }, [circuitAssy]);
+
+  useEffect(() => {
+    // first load
+    dispatch(getCircuitAssyRedux());
+  }, [dispatch]);
+
+  const handleNavigate = useCallback(
+    (blockName) => {
+      setCircuitBlockValue(blockName);
+      navigate(blockName, { replace: true });
+    },
+    [navigate],
+  );
+
+  useEffect(() => {
+    const temp = formatData(infoCircuitAssy, circuitAssy, handleNavigate);
+    setDataTable(temp);
+  }, [circuitAssy, handleNavigate, infoCircuitAssy]);
+
+  const handleChangeInfoSearch = useCallback(
+    (newInfo) => {
+      if (circuitBlockValue === 'All') {
+        dispatch(getInfoCircuitAssyRedux(newInfo));
+      } else {
+        dispatch(getListToolRedux(newInfo));
+      }
+    },
+    [dispatch],
+  );
 
   return (
     <Stack sx={{ height: '100%', p: 1 }}>
-      <InfoSearch handChangeData={handChangeData} />
-      <Box sx={{ mt: 2, height: '100%', display: 'flex' }}>
-        <DataGrid
-          disableColumnMenu
-          disableSelectionOnClick
-          autoPageSize
-          pagination
-          rows={isLoading ? [] : dataStatistics.rows}
-          columns={dataStatistics.columns}
-          loading={isLoading}
-        />
-        {openDetail && <InfoDetail data={dataDetail} toolName={toolName.current} />}
-      </Box>
+      <Stack sx={{ flexDirection: 'row' }}>
+        {/* <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel>Assy options</InputLabel>
+          <Select
+            sx={{ width: [100, 110, 140], fontSize: [12, 12, 14], minHeight: 32 }}
+            value={circuitBlockValue}
+            onChange={(e) => handleNavigate(e.target.value)}
+          >
+            {circuitAssyOptions.map((item, index) => (
+              <MenuItem key={index} value={item} sx={{ fontSize: [12, 14, 14] }}>
+                {item}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl> */}
+        <InfoSearch handleChangeInfoSearch={handleChangeInfoSearch} />
+      </Stack>
+      {/* {circuitAssy.length && (
+        <Routes>
+          <Route path="/" element={<Navigate to="All" />} />
+          <Route
+            path="All"
+            element={
+              <DataGridPremium
+                resizable
+                disableColumnMenu
+                autoPageSize
+                rows={dataTable.rows}
+                columns={dataTable.columns}
+              />
+            }
+          />
+          {circuitAssy.map((item, index) => (
+            <Route key={index} path={item.name} element={<ListTool />} />
+          ))}
+        </Routes>
+      )} */}
+      <ListTool />
     </Stack>
   );
 }

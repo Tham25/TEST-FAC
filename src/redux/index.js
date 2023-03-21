@@ -6,6 +6,7 @@ import notificationReducer from './slices/notification';
 import lotOptionsReducer from './slices/lotOptions';
 import statisticsReducer from './slices/statistics';
 import testStepsReducer from './slices/testSteps';
+import circuitAssyReducer from './slices/circuitAssy';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   lotOptions: lotOptionsReducer,
   statistics: statisticsReducer,
   testSteps: testStepsReducer,
+  circuitAssy: circuitAssyReducer,
 });
 
 const rootStore = configureStore({

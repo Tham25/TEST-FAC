@@ -8,7 +8,9 @@ function HomePage() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const titleNew = config.homePage.find((item) => item.linkTo === pathname.slice(1))?.title || '';
+    const titleNew =
+      config.homePage.find((item) => item.linkTo.split('/')[3] === pathname.split('/')[3])?.title ||
+      '';
     setTitle(titleNew);
   }, [pathname]);
 
@@ -17,7 +19,7 @@ function HomePage() {
       <Routes>
         <Route path="/" element={<Navigate to="statistics" />} />
         {config.homePage.map((item, index) => (
-          <Route key={index} path={item.navigatePath} element={item.component} />
+          <Route key={index} path={`${item.navigatePath}/*`} element={item.component} />
         ))}
       </Routes>
     </DefaultLayout>

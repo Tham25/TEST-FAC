@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -109,6 +109,7 @@ export function SidebarMenu() {
   const [openSubnav, setOpenSubnav] = useState(true);
   const [itemCurrent, setItemCurrent] = useState(0);
   const navigate = useNavigate();
+  // const { pathname } = useLocation();
 
   const handleOnClick = (index) => {
     if (itemCurrent === index) {
@@ -119,6 +120,19 @@ export function SidebarMenu() {
     }
   };
 
+  // check open
+  useEffect(() => {
+    let itemOpen = 0;
+    config.sidebarData.forEach((item, index) => {
+      item.subnav.forEach((element) => {
+        if (element.linkTo.includes(pathname)) {
+          itemOpen = index;
+        }
+      });
+    });
+    setItemCurrent(itemOpen);
+  }, [pathname]);
+
   return (
     <List sx={{ color: '#ccc' }}>
       {config.sidebarData.map((item, index) => {
@@ -126,6 +140,7 @@ export function SidebarMenu() {
         return (
           <Box key={index}>
             <ListItemButton
+              disableRipple
               sx={{
                 '&:hover': { backgroundColor: activeColor },
                 boxShadow:
@@ -148,11 +163,12 @@ export function SidebarMenu() {
             </ListItemButton>
             <Collapse in={openSubnav && isOpen} timeout="auto">
               {item.subnav.map((item, id) => {
-                const isActive = item.linkTo === pathname;
+                const isActive = item.linkTo.split('/')[3] === pathname.split('/')[3];
                 return (
                   <ListItemButton
                     key={id}
                     component="div"
+                    disableRipple
                     sx={{
                       userSelect: 'none',
                       ml: 2,
