@@ -12,6 +12,7 @@ test_stage:
   image: node:18-alpine3.16
   stage: lint
   script:
+    - apk add git
     - yarn add eslint@7.32.0 --legacy-peer-deps
     - node_modules/eslint/bin/eslint.js src/ 
 
