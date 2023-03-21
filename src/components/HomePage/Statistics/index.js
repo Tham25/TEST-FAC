@@ -58,7 +58,7 @@ function Statistics() {
   const { infoCircuitAssy } = useSelector((state) => state.statistics);
   const [dataTable, setDataTable] = useState({ rows: [], columns: [] });
   const { circuitAssy } = useSelector((state) => state.circuitAssy);
-  const [circuitBlockValue, setCircuitBlockValue] = useState('All');
+  const [circuitBlockValue, setCircuitBlockValue] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -96,14 +96,14 @@ function Statistics() {
         dispatch(getListToolRedux(newInfo));
       }
     },
-    [circuitBlockValue, dispatch],
+    [dispatch],
   );
 
   return (
     <Stack sx={{ height: '100%', p: 1 }}>
       <Stack sx={{ flexDirection: 'row' }}>
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel>Circuit Blocks</InputLabel>
+        {/* <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel>Assy options</InputLabel>
           <Select
             sx={{ width: [100, 110, 140], fontSize: [12, 12, 14], minHeight: 32 }}
             value={circuitBlockValue}
@@ -115,10 +115,10 @@ function Statistics() {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
         <InfoSearch handleChangeInfoSearch={handleChangeInfoSearch} />
       </Stack>
-      {circuitAssy.length && (
+      {/* {circuitAssy.length && (
         <Routes>
           <Route path="/" element={<Navigate to="All" />} />
           <Route
@@ -137,7 +137,8 @@ function Statistics() {
             <Route key={index} path={item.name} element={<ListTool />} />
           ))}
         </Routes>
-      )}
+      )} */}
+      <ListTool />
     </Stack>
   );
 }
