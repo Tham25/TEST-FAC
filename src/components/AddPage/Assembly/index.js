@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
@@ -6,19 +6,21 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 import {
   clearDataAssy,
   createAssyHistoryRedux,
+  getAssyHistoryRedux,
   getCircuitAssyRedux,
 } from '~/redux/slices/circuitAssy';
 import { defaultSelect, formatDataTable, validateForm } from './BoxEdit';
 import InputText from './InputText';
-import { setNotification } from '~/redux/slices/notification';
+import { clearNotification, setNotification } from '~/redux/slices/notification';
 
 const assyDefault = { id: -1, name: defaultSelect.name, steps: [] };
 
 function Assembly() {
   const dispatch = useDispatch();
-  const { circuitAssy, assyHistory, assyId } = useSelector((state) => state.circuitAssy);
+  const { circuitAssy, assyHistory } = useSelector((state) => state.circuitAssy);
   const [assyValue, setAssyValue] = useState(assyDefault.name);
   const { user } = useSelector((state) => state.user);
+  const assyId = useRef('');
 
   const assyArray = useMemo(() => [assyDefault, ...circuitAssy], [circuitAssy]);
   const stepArray = useMemo(
@@ -26,6 +28,11 @@ function Assembly() {
     [assyValue, assyArray],
   );
   const [formCreate, setFormCreate] = useState([]);
+
+  useEffect(() => {
+    dispatch(clearDataAssy({ field: 'assyId', data: '' }));
+    dispatch(clearDataAssy({ field: 'assyHistory', data: [] }));
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getCircuitAssyRedux());
@@ -71,6 +78,7 @@ function Assembly() {
         );
       }
     } else {
+      dispatch(clearNotification());
       newForm = formDefault;
     }
 
@@ -96,7 +104,7 @@ function Assembly() {
 
   const handleSubmitForm = () => {
     let result = '';
-    if (assyId === '' || assyValue === assyDefault.name) {
+    if (assyId.current === '' || assyValue === assyDefault.name) {
       result = 'Please fill assyID, assyName!';
     } else {
       result = validateForm(formCreate);
@@ -106,14 +114,18 @@ function Assembly() {
       dispatch(setNotification({ open: true, severity: 'error', message: result }));
     } else {
       const formAssy = {
-        id_assy: assyId,
+        id_assy: assyId.current,
         name: assyValue,
         steps: formCreate,
       };
 
       dispatch(createAssyHistoryRedux(formAssy));
-      setFormCreate(formDefault);
     }
+  };
+
+  const handleSearchAssyHis = (idValue) => {
+    assyId.current = idValue;
+    dispatch(getAssyHistoryRedux('id_assy', idValue));
   };
 
   return (
@@ -125,6 +137,7 @@ function Assembly() {
             sx={{ width: [100, 110, 140], fontSize: [12, 14, 16], minHeight: 40, mr: 2 }}
             value={assyValue}
             onChange={(e) => {
+              assyId.current = '';
               setAssyValue(e.target.value);
               dispatch(clearDataAssy({ field: 'assyId', data: '' }));
               dispatch(clearDataAssy({ field: 'assyHistory', data: [] }));
@@ -137,7 +150,7 @@ function Assembly() {
             ))}
           </Select>
         </FormControl>
-        <InputText />
+        <InputText assyId={assyId.current} handleSearchAssyHis={handleSearchAssyHis} />
       </Box>
       {assyValue !== assyDefault.name && formCreate.length ? (
         <DataGridPremium

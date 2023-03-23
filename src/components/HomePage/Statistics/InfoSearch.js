@@ -37,9 +37,10 @@ export function InfoSearch({ handleChangeInfoSearch }) {
 
   useEffect(() => {
     const lotInfo = lotValue === 'All' ? ['', ''] : lotValue.split('xxxx');
+    console.log('dateSearch', dateSearch);
     const infoSearch = {
-      startdate: dateSearch.fromDate,
-      enddate: dateSearch.toDate,
+      startdate: '2023-03-16',
+      enddate: '2023-03-23',
       sn_start: lotInfo[0],
       sn_end: lotInfo[1],
     };
