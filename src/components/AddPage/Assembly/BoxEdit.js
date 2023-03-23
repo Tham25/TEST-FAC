@@ -74,7 +74,7 @@ export function formatDataTable(formCreate, handleChangeForm) {
         Status: [defaultSelect, { value: 1, name: 'OK' }, { value: 0, name: 'NG' }],
         'Num of reworks': item.rework_count,
         Reason: item.NG_reason,
-        Stragtegy: item.NG_solution,
+        Strategy: item.NG_solution,
         Author: item.test_user,
         Account: item.account,
       });
@@ -116,7 +116,7 @@ export function formatDataTable(formCreate, handleChangeForm) {
           columInfo.renderEditCell = (params) => {
             let field = key === 'Num of reworks' && 'rework_count';
             if (key === 'Reason') field = 'NG_reason';
-            if (key === 'Stragtegy') field = 'NG_solution';
+            if (key === 'Strategy') field = 'NG_solution';
             if (key === 'Author') field = 'test_user';
 
             return (

@@ -70,7 +70,7 @@ function checkAssyId(assyIdsCheck, formMapping, serialNumber) {
 
 function Mapping() {
   const dispatch = useDispatch();
-  const { circuitAssy, assyIdsCheck, assyHistory } = useSelector((state) => state.circuitAssy);
+  const { circuitAssy, assyIdsCheck, mappingHistory } = useSelector((state) => state.circuitAssy);
   const [formMapping, setFormMapping] = useState([]);
   const [errorForm, setErrorForm] = useState({});
   const [statusMapping, setStatusMapping] = useState('Verify');
@@ -92,14 +92,14 @@ function Mapping() {
   );
 
   useEffect(() => {
-    if (assyHistory.length) {
+    if (mappingHistory.length) {
       const newForm = [];
       formDefault.forEach((item) => {
-        const index = assyHistory.findIndex((element) => element.name === item.assy_name);
+        const index = mappingHistory.findIndex((element) => element.name === item.assy_name);
         if (index !== -1) {
           newForm.push({
             assy_name: item.assy_name,
-            assy_id: assyHistory[index].id_assy,
+            assy_id: mappingHistory[index].id_assy,
           });
         }
       });
@@ -107,7 +107,7 @@ function Mapping() {
     } else {
       setFormMapping(formDefault);
     }
-  }, [formDefault, assyHistory]);
+  }, [formDefault, mappingHistory]);
 
   const handleChangAssyId = (field, value) => {
     setFormMapping((prev) =>

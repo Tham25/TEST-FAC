@@ -14,7 +14,7 @@ const initialState = {
   circuitAssy: [],
   assyHistory: [],
   assyIdsCheck: [],
-  assyId: '',
+  mappingHistory: [],
 };
 
 const slice = createSlice({
@@ -63,11 +63,9 @@ export function getAssyHistoryRedux(field, assyId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      if (field === 'id_assy') {
-        dispatch(slice.actions.actionSuccess({ field: 'assyId', data: assyId }));
-      }
+      const fieldHistory = field === 'id_assy' ? 'assyHistory' : 'mappingHistory';
       const assyHistory = await getAssyHistory(field, assyId);
-      dispatch(slice.actions.actionSuccess({ field: 'assyHistory', data: assyHistory }));
+      dispatch(slice.actions.actionSuccess({ field: fieldHistory, data: assyHistory }));
     } catch (e) {
       dispatch(slice.actions.hasError(e.message));
     }
