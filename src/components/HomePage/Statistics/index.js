@@ -5,14 +5,14 @@ import { Stack } from '@mui/material';
 import { getListToolRedux } from '~/redux/slices/statistics';
 import { InfoSearch } from './InfoSearch';
 import ListTool from './ListTool';
-import { getCircuitAssyRedux } from '~/redux/slices/circuitAssy';
+import { getAssyTemplateRedux } from '~/redux/slices/circuitAssy';
 
 function Statistics() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     // first load
-    dispatch(getCircuitAssyRedux());
+    dispatch(getAssyTemplateRedux());
   }, [dispatch]);
 
   const handleChangeInfoSearch = useCallback(

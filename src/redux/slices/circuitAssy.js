@@ -11,7 +11,7 @@ import { clearNotification, setNotification } from './notification';
 const initialState = {
   isLoading: false,
   error: '',
-  circuitAssy: [],
+  assyTemplate: [],
   assyHistory: [],
   assyIdsCheck: [],
   mappingHistory: [],
@@ -46,13 +46,13 @@ export default slice.reducer;
 
 export const { clearDataAssy } = slice.actions;
 
-export function getCircuitAssyRedux() {
+export function getAssyTemplateRedux() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const circuitAssy = await getAssyTemplate();
+      const assyTemplate = await getAssyTemplate();
 
-      dispatch(slice.actions.actionSuccess({ field: 'circuitAssy', data: circuitAssy }));
+      dispatch(slice.actions.actionSuccess({ field: 'assyTemplate', data: assyTemplate }));
     } catch (e) {
       dispatch(slice.actions.hasError(e.message));
     }
