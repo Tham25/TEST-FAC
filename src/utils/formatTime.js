@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 export const timeList = [
   'Today',
   'Yesterday',
@@ -77,3 +79,7 @@ export function getFormatTime(timeOption) {
 
   return { fromDate: `${fullDate}T00:00`, toDate };
 }
+
+export const fDate = (date) => {
+  return format(new Date(date), 'dd-MM-yyyy hh:mm');
+};

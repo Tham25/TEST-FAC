@@ -7,22 +7,24 @@ import {
   clearDataAssy,
   createAssyHistoryRedux,
   getAssyHistoryRedux,
-  getCircuitAssyRedux,
+  getAssyTemplateRedux,
 } from '~/redux/slices/circuitAssy';
 import { defaultSelect, formatDataTable, validateForm } from './BoxEdit';
 import InputText from './InputText';
 import { clearNotification, setNotification } from '~/redux/slices/notification';
+import { fieldAssyHistory } from '~/config/assyHistory';
 
 const assyDefault = { id: -1, name: defaultSelect.name, steps: [] };
 
 function Assembly() {
   const dispatch = useDispatch();
-  const { circuitAssy, assyHistory } = useSelector((state) => state.circuitAssy);
+  const { assyTemplate, assyHistory } = useSelector((state) => state.circuitAssy);
   const [assyValue, setAssyValue] = useState(assyDefault.name);
   const { user } = useSelector((state) => state.user);
   const assyId = useRef('');
+  const device = useRef('');
 
-  const assyArray = useMemo(() => [assyDefault, ...circuitAssy], [circuitAssy]);
+  const assyArray = useMemo(() => [assyDefault, ...assyTemplate], [assyTemplate]);
   const stepArray = useMemo(
     () => assyArray.find((item) => item.name === assyValue).steps,
     [assyValue, assyArray],
@@ -35,12 +37,12 @@ function Assembly() {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getCircuitAssyRedux());
+    dispatch(getAssyTemplateRedux());
   }, [dispatch]);
 
   useEffect(() => {
-    if (circuitAssy.length) setAssyValue(circuitAssy[0].name);
-  }, [circuitAssy]);
+    if (assyTemplate.length) setAssyValue(assyTemplate[0].name);
+  }, [assyTemplate]);
 
   const formDefault = useMemo(
     () =>
@@ -58,16 +60,20 @@ function Assembly() {
     [stepArray, user.user_email, user.user_name],
   );
 
+  console.log('assyHistoryassyHistory', assyHistory);
+
   useEffect(() => {
     const lenHis = assyHistory.length;
     let newForm = [];
 
+    device.current = '';
     if (lenHis) {
       if (assyHistory[lenHis - 1].name === assyValue) {
         newForm = assyHistory[lenHis - 1].steps.map((item) => ({
           ...item,
           account: assyHistory[lenHis - 1].created_user.username,
         }));
+        device.current = assyHistory[lenHis - 1].device;
       } else {
         dispatch(
           setNotification({
@@ -119,13 +125,15 @@ function Assembly() {
         steps: formCreate,
       };
 
+      if (device.current !== '') formAssy.device = device.current;
+
       dispatch(createAssyHistoryRedux(formAssy));
     }
   };
 
   const handleSearchAssyHis = (idValue) => {
     assyId.current = idValue;
-    dispatch(getAssyHistoryRedux('id_assy', idValue));
+    dispatch(getAssyHistoryRedux(fieldAssyHistory.assyId, idValue));
   };
 
   return (

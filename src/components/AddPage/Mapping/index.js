@@ -1,76 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Box, Button, Stack, TextField } from '@mui/material';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { Box, Button, Stack } from '@mui/material';
 
 import {
   checkAssyIdsRedux,
   getAssyHistoryRedux,
-  getCircuitAssyRedux,
+  getAssyTemplateRedux,
   mappingAssyIdRedux,
 } from '~/redux/slices/circuitAssy';
 import InputSearch from '~/components/InputSearchSN';
-
-function validateFormMap(form) {
-  let error = false;
-  const errorFormMap = {};
-
-  form.forEach((item) => {
-    const assyId = item.assy_id.trim();
-    if (!assyId) {
-      error = true;
-      errorFormMap[item.assy_name] = { mess: 'This field is required!', severity: 'error' };
-    } else {
-      const array = form.filter((element) => element.assy_id === assyId);
-      if (array.length > 1) {
-        error = true;
-        errorFormMap[item.assy_name] = { mess: 'This Assy ID is duplicated!', severity: 'error' };
-      }
-    }
-  });
-
-  return { error, errorFormMap };
-}
-
-function checkAssyId(assyIdsCheck, formMapping, serialNumber) {
-  const errorFormMap = {};
-  let error = false;
-  assyIdsCheck.forEach((item) => {
-    const assyId = Object.keys(item)[0];
-    const info = item[assyId];
-
-    const result = formMapping.find((element) => element.assy_id === assyId);
-
-    if (result) {
-      if (info.existed && info.name !== result.assy_name) {
-        errorFormMap[result.assy_name] = {
-          mess: `Assy Id is existed in ${info.name}!`,
-          severity: 'error',
-        };
-        error = true;
-      } else if (!info.existed) {
-        error = true;
-        errorFormMap[result.assy_name] = { mess: "Assy Id ins't existed!", severity: 'error' };
-      }
-
-      if (info.serial_number && info.serial_number !== serialNumber) {
-        errorFormMap[result.assy_name] = {
-          mess: `This assy is existed in device ${info.serial_number}!`,
-          severity: 'warning',
-        };
-      }
-    }
-  });
-
-  return { error, errorFormMap };
-}
+import InputAssyId from './InputAssyId';
+import { checkAssyId, validateFormMap } from '~/utils/mapping';
+import { fieldAssyHistory } from '~/config/assyHistory';
 
 function Mapping() {
   const dispatch = useDispatch();
-  const { circuitAssy, assyIdsCheck, mappingHistory } = useSelector((state) => state.circuitAssy);
+  const { assyTemplate, assyIdsCheck, mappingHistory } = useSelector((state) => state.circuitAssy);
   const [formMapping, setFormMapping] = useState([]);
   const [errorForm, setErrorForm] = useState({});
   const [statusMapping, setStatusMapping] = useState('Verify');
@@ -79,27 +25,28 @@ function Mapping() {
   const [viewBoxState, setViewBoxState] = useState(false);
 
   useEffect(() => {
-    dispatch(getCircuitAssyRedux());
+    dispatch(getAssyTemplateRedux());
   }, [dispatch]);
 
   const formDefault = useMemo(
     () =>
-      circuitAssy.map((item) => ({
+      assyTemplate.map((item) => ({
         assy_name: item.name,
         assy_id: '',
       })),
-    [circuitAssy],
+    [assyTemplate],
   );
 
   useEffect(() => {
     if (mappingHistory.length) {
       const newForm = [];
       formDefault.forEach((item) => {
-        const index = mappingHistory.findIndex((element) => element.name === item.assy_name);
-        if (index !== -1) {
+        const assyHis = mappingHistory.find((element) => element.name === item.assy_name);
+        if (assyHis) {
+          const { assy } = assyHis;
           newForm.push({
             assy_name: item.assy_name,
-            assy_id: mappingHistory[index].id_assy,
+            assy_id: assy[assy.length - 1].id_assy,
           });
         }
       });
@@ -164,7 +111,7 @@ function Mapping() {
     setErrorForm({});
     setViewBoxState(false);
     setFormMapping(formDefault);
-    dispatch(getAssyHistoryRedux('serial_number', value));
+    dispatch(getAssyHistoryRedux(fieldAssyHistory.serialNumber, value));
   };
 
   return (
@@ -187,6 +134,9 @@ function Mapping() {
               <span style={{ color: 'red', fontSize: 14 }}>(*)</span>
             </Box>
             <Box sx={{ mt: 1, color: 'red', fontSize: 12 }}>{errorSN.current}</Box>
+            <Box sx={{ mt: 1 }}>
+              Imei: {mappingHistory.length ? mappingHistory[0]?.assy[0]?.device.imei : ''}
+            </Box>
           </Stack>
           <Button
             sx={{ backgroundColor: '#e7e7e7', justifySelf: 'end', height: '48px' }}
@@ -213,64 +163,3 @@ function Mapping() {
 }
 
 export default Mapping;
-
-function InputAssyId({ title, assyId, error, handleChangAssyId, viewBoxState }) {
-  const [inputText, setInputText] = useState(assyId);
-
-  useEffect(() => {
-    setInputText(assyId);
-  }, [assyId]);
-
-  const handleChangeText = (e) => setInputText(e.target.value);
-  const handelKeyDown = (e) => {
-    if (e.keyCode === 13) {
-      handleChangAssyId(title, e.target.value);
-      e.target.blur();
-    }
-  };
-
-  return (
-    <Stack direction="row" sx={{ width: '60%', maxWidth: 500, mt: 2 }}>
-      <Stack sx={{ flex: 1, justifyContent: 'center' }}>
-        <Box>
-          {title} <span style={{ color: 'red', fontSize: 12 }}>&nbsp;(*)</span> :
-        </Box>
-        <Box
-          sx={{ mt: '4px', fontSize: 12, color: error?.severity === 'error' ? 'red' : '#d19408' }}
-        >
-          {error?.mess}
-        </Box>
-      </Stack>
-      <TextField
-        sx={{ width: '200px', ml: 4 }}
-        value={inputText}
-        onChange={handleChangeText}
-        onKeyDown={handelKeyDown}
-        inputProps={{
-          sx: {
-            p: 1,
-          },
-        }}
-        onBlur={(e) => handleChangAssyId(title, e.target.value)}
-      />
-      {viewBoxState && <BoxState error={error} />}
-    </Stack>
-  );
-}
-
-function BoxState({ error }) {
-  let icon;
-
-  if (error) {
-    icon =
-      error.severity === 'error' ? (
-        <HighlightOffIcon sx={{ color: 'red' }} />
-      ) : (
-        <ErrorOutlineIcon sx={{ color: '#d19408' }} />
-      );
-  } else {
-    icon = <CheckCircleOutlineIcon sx={{ color: 'green' }} />;
-  }
-
-  return <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', width: '20px' }}>{icon}</Box>;
-}
