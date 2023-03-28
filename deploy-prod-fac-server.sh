@@ -37,6 +37,6 @@ read -p "Copy source to server done -> build docker"
 echo "Check docker build for $SSH_USERNAME_STAGING_2@$SSH_HOST_STAGING_2"
 ssh -i $PEM_KEY $SSH_USERNAME_STAGING_2@$SSH_HOST_STAGING_2 "ls -la odin_factory/web"
 read -p "building docker"
-ssh -i $PEM_KEY $SSH_USERNAME_STAGING_2@$SSH_HOST_STAGING_2 "cd ~/odin_factory/web && docker build . -t odin_fac_web ; docker stop odin_fac_web ; docker rm odin_fac_web ; docker run -d --name odin_fac_web -p 8084:80 odin_fac_web --restart=always && exit"
+ssh -i $PEM_KEY $SSH_USERNAME_STAGING_2@$SSH_HOST_STAGING_2 "cd ~/odin_factory/web && docker build . -t odin_fac_web; docker stop odin_fac_web ; docker rm odin_fac_web ; docker run -d --restart=always --name odin_fac_web -p 8084:80 odin_fac_web && exit"
  
 read -p "Finish"
