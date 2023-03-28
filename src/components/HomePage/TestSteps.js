@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DataGridPremium, GridToolbarFilterButton } from '@mui/x-data-grid-premium';
 
 import { formatTestSteps } from '~/utils/formatStatistics';
+import { getTestStepsRedux } from '~/redux/slices/testSteps';
 
-function TestSteps({ toolName = '', serialNumber, isLoading = false }) {
-  const { testSteps } = useSelector((state) => state.testSteps);
+function TestSteps({ toolName = '', serialNumber }) {
+  const { testSteps, isLoading } = useSelector((state) => state.testSteps);
   const [dataTable, setDataTable] = useState({ rows: [], columns: [] });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // first load
+    dispatch(getTestStepsRedux(serialNumber));
+  }, [dispatch, serialNumber]);
 
   useEffect(() => {
     // filter
